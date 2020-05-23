@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import PresenceLog from "./react-components/presence-log.js";
+import PresenceList from "./react-components/presence-list.js";
 import InWorldChatBox from "./react-components/in-world-chat-box.js";
 import styles from "./assets/stylesheets/ui-root.scss";
 import entryStyles from "./assets/stylesheets/entry.scss";
@@ -54,13 +55,29 @@ class ChatBox extends React.Component {
     this.props.onSendMessage(msg);
   };
 
+  state = {
+    expanded: false
+  }
+
   render() {
     const rootStyles = {
         [styles.ui]: true,
         "ui-root": true,
+        'light-theme': true
+    }
+    const onExpand = (expanded) => this.setState({ expanded: expanded });
+    const presences = [];
+    const players = document.querySelectorAll('[player-info]');
+    for (let i = 0; i < players.length; i++) {
+      presences.push(players[i].components['player-info'].data);
     }
     return (
       <div className={classNames(rootStyles)}>
+        <PresenceList
+          presences={presences}
+          expanded={this.state.expanded}
+          onExpand={onExpand}
+        />
         <PresenceLog
           entries={presenceLogEntries}
           hubId={"hub_id"}
