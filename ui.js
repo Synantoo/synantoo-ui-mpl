@@ -39,7 +39,7 @@ window.app.addToPresenceLog = addToPresenceLog;
 window.app.sendMessage = window.app.sendMessage || fakeSendMessage;
 
 function mountUI(scene, props = {}) {
-  ReactDOM.render(<ChatBox { ...props } onSendMessage={window.app.sendMessage}></ChatBox>, document.getElementById("chatbox"));
+  ReactDOM.render(<ChatBox { ...props } onSendMessage={window.app.sendMessage}></ChatBox>, document.getElementById("ui-root"));
 }
 
 const remountUI = props => {
@@ -55,8 +55,12 @@ class ChatBox extends React.Component {
   };
 
   render() {
+    const rootStyles = {
+        [styles.ui]: true,
+        "ui-root": true,
+    }
     return (
-      <>
+      <div className={classNames(rootStyles)}>
         <PresenceLog
           entries={presenceLogEntries}
           hubId={"hub_id"}
@@ -68,7 +72,7 @@ class ChatBox extends React.Component {
             onSendMessage={this.sendMessage}
           />
         </div>
-      </>
+      </div>
     );
   }
 }
