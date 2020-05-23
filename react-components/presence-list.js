@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { FormattedMessage } from "react-intl";
 import classNames from "classnames";
 
 import rootStyles from "../assets/stylesheets/ui-root.scss";
 import styles from "../assets/stylesheets/presence-list.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
-import { faDesktop } from "@fortawesome/free-solid-svg-icons/faDesktop";
+import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
+import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
 import { InlineSVG } from "./svgi";
 
 export default class PresenceList extends Component {
@@ -18,7 +18,7 @@ export default class PresenceList extends Component {
   };
 
   domForPresence = (presence) => {
-    const icon = <FontAwesomeIcon icon={faDesktop} />;
+    const icon = <FontAwesomeIcon icon={presence.muted ? faMicrophoneSlash : faMicrophone} />;
     return (
         <div className={styles.row}>
           <div className={styles.icon}>
