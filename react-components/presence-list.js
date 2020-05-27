@@ -61,14 +61,16 @@ export default class PresenceList extends Component {
 
   render() {
     const occupantCount = NAF.connection.adapter ? Object.keys(NAF.connection.adapter.occupants).length + 1 : 0;
+    const avatarEnabled = document.getElementById('remote-avatar') !== null;
     return (
       <div>
         <button
           title="Members"
           aria-label={`Toggle list of ${occupantCount} member${occupantCount === 1 ? "" : "s"}`}
-          onClick={() => {
+          onClick={avatarEnabled ? () => {
             this.props.onExpand(!this.props.expanded);
-          }}
+          } : null}
+          style={!avatarEnabled ? {cursor: 'auto'} : null}
           className={classNames({
             [rootStyles.presenceListButton]: true,
             [rootStyles.presenceInfoSelected]: this.props.expanded
