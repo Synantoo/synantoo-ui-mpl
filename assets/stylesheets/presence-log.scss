@@ -1,16 +1,15 @@
 @import 'shared.scss';
 
 :local(.presence-log) {
-  align-self: flex-start;
-  flex: 10;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
+  //align-self: flex-start;
+  //flex: 10;
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: flex-end;
+  //align-items: flex-start;
   margin-bottom: 8px;
   margin-top: 90px;
   overflow: hidden;
-  pointer-events: none;
   width: 100%;
 
   :local(.presence-log-entry) {
@@ -152,6 +151,7 @@
   transform: translateX(-50%);
   width: 95%;
   max-width: 700px;
+  max-height: 80vh;
 
   :local(.presence-log-entry) {
     background-color: var(--hud-panel-background);
@@ -168,6 +168,17 @@
     a {
       color: var(--hud-panel-link-color);
     }
+  }
+}
+
+:local(.presence-log-in-room-selected) {
+  overflow: auto;
+  pointer-events: auto;
+  :local(.presence-log-entry) {
+    user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
   }
 }
 

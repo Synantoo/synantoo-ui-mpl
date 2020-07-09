@@ -5,6 +5,7 @@ import styles from "../assets/stylesheets/message-entry.scss";
 import sendMessageIcon from "../assets/images/send_message.svgi";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
+import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { handleTextFieldFocus, handleTextFieldBlur } from "../utils/focus-utils";
 //import { spawnChatMessage } from "./chat-message";
@@ -18,7 +19,8 @@ class InWorldChatBox extends Component {
     onSendMessage: PropTypes.func,
     onObjectCreated: PropTypes.func,
     history: PropTypes.object,
-    enableSpawning: PropTypes.bool
+    enableSpawning: PropTypes.bool,
+    toggleShowExpired: PropTypes.func
   };
 
   state = {
@@ -59,6 +61,21 @@ class InWorldChatBox extends Component {
               }
             }}
           />
+          <button
+            onClick={this.props.toggleShowExpired}
+            title={this.props.showExpired ? "Hide old messages" : "Show old messages"}
+            className={classNames([
+              styles.messageEntryButton,
+              styles.messageEntryButtonInRoom,
+              styles.messageEntryUpload
+            ],
+            {[styles.messageEntryButtonInRoomSelected]: this.props.showExpired}
+            )}
+          >
+            <i>
+              <FontAwesomeIcon icon={faHistory} />
+            </i>
+          </button>
           {this.props.enableSpawning && (
             <label
               htmlFor="message-entry-media-input"

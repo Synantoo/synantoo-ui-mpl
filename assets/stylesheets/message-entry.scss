@@ -100,6 +100,10 @@
   color: $action-label-color;
 }
 
+:local(.message-entry-button-in-room-selected) {
+  color: $action-label-color;
+}
+
 :local(.message-entry-upload) {
   margin-bottom: 1px;
   display: flex;

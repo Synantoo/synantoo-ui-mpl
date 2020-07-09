@@ -8,11 +8,11 @@ import styles from "./assets/stylesheets/ui-root.scss";
 import entryStyles from "./assets/stylesheets/entry.scss";
 import "./assets/stylesheets/hub.scss";
 
-const presenceLogEntries = [];
+let presenceLogEntries = [];
 const addToPresenceLog = entry => {
   entry.key = Date.now().toString();
 
-  presenceLogEntries.push(entry);
+  presenceLogEntries = [...presenceLogEntries, entry];
   remountUI({ presenceLogEntries });
 //  if (entry.type === "chat" && scene.is("loaded")) {
 //    scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_CHAT_MESSAGE);
@@ -23,10 +23,10 @@ const addToPresenceLog = entry => {
     entry.expired = true;
     remountUI({ presenceLogEntries });
 
-    setTimeout(() => {
+//    setTimeout(() => {
 //      presenceLogEntries.splice(presenceLogEntries.indexOf(entry), 1);
-      remountUI({ presenceLogEntries });
-    }, 5000);
+//      remountUI({ presenceLogEntries });
+//    }, 5000);
   }, 20000);
 };
 
@@ -55,8 +55,13 @@ class ChatBox extends React.Component {
     this.props.onSendMessage(msg);
   };
 
+  toggleShowExpired = () => {
+    this.setState((prevState) => ({showExpired: !prevState.showExpired}));
+  };
+
   state = {
-    expanded: false
+    expanded: false,
+    showExpired: false
   }
 
   render() {
@@ -79,12 +84,15 @@ class ChatBox extends React.Component {
           onExpand={onExpand}
         />
         <PresenceLog
+          showExpired={this.state.showExpired}
           entries={presenceLogEntries}
           hubId={"hub_id"}
           inRoom
         />
         <div className={entryStyles.center}>
           <InWorldChatBox
+            toggleShowExpired={this.toggleShowExpired}
+            showExpired={this.state.showExpired}
             discordBridges={[]}
             onSendMessage={this.sendMessage}
           />

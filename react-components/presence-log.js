@@ -14,10 +14,23 @@ export default class PresenceLog extends Component {
     entries: PropTypes.array,
     inRoom: PropTypes.bool,
     hubId: PropTypes.string,
+    showExpired: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
+    this.messagesEndRef = React.createRef();
+  }
+
+  componentDidUpdate (prevProps) {
+    if (!this.props.showExpired && (
+        this.props.entries.length !== prevProps.entries.length || this.props.showExpired !== prevProps.showExpired)) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom = () => {
+    this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   domForEntry = e => {
@@ -25,7 +38,7 @@ export default class PresenceLog extends Component {
       [styles.presenceLogEntry]: true,
       [styles.presenceLogEntryWithButton]: (e.type === "chat" || e.type === "image") && e.maySpawn,
       [styles.presenceLogChat]: e.type === "chat",
-      [styles.expired]: !!e.expired
+      [styles.expired]: this.props.showExpired ? false : !!e.expired
     };
 
     const isBot = false;
@@ -118,9 +131,15 @@ export default class PresenceLog extends Component {
   render() {
     const presenceClasses = {
       [styles.presenceLog]: true,
-      [styles.presenceLogInRoom]: this.props.inRoom
+      [styles.presenceLogInRoom]: this.props.inRoom,
+      [styles.presenceLogInRoomSelected]: this.props.showExpired
     };
 
-    return <div className={classNames(presenceClasses)}>{this.props.entries.map(this.domForEntry)}</div>;
+    return (
+      <div className={classNames(presenceClasses)}>
+        {this.props.entries.map(this.domForEntry)}
+        <div ref={this.messagesEndRef} />
+      </div>
+    );
   }
 }
