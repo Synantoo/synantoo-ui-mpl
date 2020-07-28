@@ -12,7 +12,7 @@ import { InlineSVG } from "./svgi";
 
 export default class PresenceList extends Component {
   static propTypes = {
-    presences: PropTypes.object,
+    presences: PropTypes.array,
     expanded: PropTypes.bool,
     onExpand: PropTypes.func
   };

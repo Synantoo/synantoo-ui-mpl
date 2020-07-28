@@ -30,9 +30,9 @@ const addToPresenceLog = entry => {
   }, 20000);
 };
 
-const fakeSendMessage = (msg) => {
+const fakeSendMessage = (msg, toClientId) => {
   const pseudo = localStorage.getItem('pseudo') || 'Visiteur';
-  addToPresenceLog({ type: "chat", name: pseudo, body: msg });
+  addToPresenceLog({ type: "chat", name: pseudo, toClientId: toClientId, body: msg });
 }
 
 window.app = window.app || {};
@@ -50,9 +50,9 @@ const remountUI = props => {
 };
 
 class ChatBox extends React.Component {
-  sendMessage = msg => {
+  sendMessage = (msg, toClientId) => {
     if (msg.length === 0) return;
-    this.props.onSendMessage(msg);
+    this.props.onSendMessage(msg, toClientId);
   };
 
   toggleShowExpired = () => {
@@ -91,6 +91,7 @@ class ChatBox extends React.Component {
         />
         <div className={entryStyles.center}>
           <InWorldChatBox
+            presences={presences}
             toggleShowExpired={this.toggleShowExpired}
             showExpired={this.state.showExpired}
             discordBridges={[]}

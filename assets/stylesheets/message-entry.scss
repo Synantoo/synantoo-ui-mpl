@@ -1,5 +1,30 @@
 @import 'shared';
 
+:local(.recipients) {
+  color: var(--menu-text-color);
+  position: absolute;
+  z-index: 5;
+  bottom: 60px;
+  left: 60px;
+  max-width: 200px;
+  background-color: var(--text-field-background-color);
+  border: 1px solid var(--text-field-border-color);
+  border-radius: 16px;
+  padding: 1em 1em 0.5em 1em;
+
+}
+
+:local(.recipient-row) {
+  font-weight: bold;
+  padding-bottom: 0.5em;
+}
+
+:local(.recipient-row):hover {
+  transition: background-color 0.15s linear;
+  color: $action-label-color;
+}
+
+
 :local(.message-entry) {
   position: relative;
   margin: 10px 24px 24px 24px;
@@ -59,7 +84,10 @@
   border: 0px;
   font-size: 1.5em;
   cursor: pointer;
-  margin: 0px 10px;
+}
+
+:local(.message-entry-history) {
+  margin: 0px 0px 0px 10px;
 }
 
 :local(.message-entry-spawn) {
@@ -142,7 +170,6 @@
   :local(.message-entry-button-in-room) {
     border: 0;
     background-color: transparent;
-    margin-right: 10px;
   }
 }
 
