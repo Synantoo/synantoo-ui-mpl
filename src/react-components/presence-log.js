@@ -22,23 +22,27 @@ export default class PresenceLog extends Component {
     this.messagesEndRef = React.createRef();
   }
 
-  componentDidUpdate (prevProps) {
-    if (!this.props.showExpired && (
-        this.props.entries.length !== prevProps.entries.length || this.props.showExpired !== prevProps.showExpired)) {
+  componentDidUpdate(prevProps) {
+    if (
+      !this.props.showExpired &&
+      (this.props.entries.length !== prevProps.entries.length ||
+        this.props.showExpired !== prevProps.showExpired)
+    ) {
       this.scrollToBottom();
     }
   }
 
   scrollToBottom = () => {
-    this.messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
+    this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
-  domForEntry = e => {
+  domForEntry = (e) => {
     const entryClasses = {
       [styles.presenceLogEntry]: true,
-      [styles.presenceLogEntryWithButton]: (e.type === "chat" || e.type === "image") && e.maySpawn,
+      [styles.presenceLogEntryWithButton]:
+        (e.type === "chat" || e.type === "image") && e.maySpawn,
       [styles.presenceLogChat]: e.type === "chat",
-      [styles.expired]: this.props.showExpired ? false : !!e.expired
+      [styles.expired]: this.props.showExpired ? false : !!e.expired,
     };
 
     const isBot = false;
@@ -48,36 +52,48 @@ export default class PresenceLog extends Component {
       case "entered":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
-            <b>{e.name}</b>&nbsp;<FormattedMessage id={`presence.${e.type}_${e.presence}`} />
+            <b>{e.name}</b>&nbsp;
+            <FormattedMessage id={`presence.${e.type}_${e.presence}`} />
           </div>
         );
       case "leave":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
-            <b>{e.name}</b>&nbsp;<FormattedMessage id={`presence.${e.type}`} />
+            <b>{e.name}</b>&nbsp;
+            <FormattedMessage id={`presence.${e.type}`} />
           </div>
         );
       case "display_name_changed":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
-            <b>{e.oldName}</b>&nbsp;<FormattedMessage id="presence.name_change" />&nbsp;<b>{e.newName}</b>.
+            <b>{e.oldName}</b>&nbsp;
+            <FormattedMessage id="presence.name_change" />
+            &nbsp;<b>{e.newName}</b>.
           </div>
         );
       case "scene_changed":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
-            <b>{e.name}</b>&nbsp;<FormattedMessage id="presence.scene_change" />&nbsp;<b>{e.sceneName}</b>.
+            <b>{e.name}</b>&nbsp;
+            <FormattedMessage id="presence.scene_change" />
+            &nbsp;<b>{e.sceneName}</b>.
           </div>
         );
       case "hub_name_changed":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
-            <b>{e.name}</b>&nbsp;<FormattedMessage id="presence.hub_name_change" />&nbsp;<b>{e.hubName}</b>.
+            <b>{e.name}</b>&nbsp;
+            <FormattedMessage id="presence.hub_name_change" />
+            &nbsp;<b>{e.hubName}</b>.
           </div>
         );
       case "chat":
         let name = e.toClientId ? `${e.name} (private message to you)` : e.name;
-        if (e.toClientId && NAF.connection.adapter && NAF.connection.adapter.clientId !== e.toClientId) {
+        if (
+          e.toClientId &&
+          NAF.connection.adapter &&
+          NAF.connection.adapter.clientId !== e.toClientId
+        ) {
           name = `${e.name} (private message)`;
         }
 
@@ -92,38 +108,38 @@ export default class PresenceLog extends Component {
             includeFromLink={this.props.inRoom && !isBot}
           />
         );
-//      case "image":
-//        return (
-//          <ImageMessage
-//            key={e.key}
-//            name={e.name}
-//            className={classNames(entryClasses, styles.media)}
-//            body={e.body}
-//            maySpawn={e.maySpawn}
-//          />
-//        );
-//      case "photo":
-//        return (
-//          <PhotoMessage
-//            key={e.key}
-//            name={e.name}
-//            className={classNames(entryClasses, styles.media)}
-//            body={e.body}
-//            maySpawn={e.maySpawn}
-//            hubId={this.props.hubId}
-//          />
-//        );
-//      case "video":
-//        return (
-//          <VideoMessage
-//            key={e.key}
-//            name={e.name}
-//            className={classNames(entryClasses, styles.media)}
-//            body={e.body}
-//            maySpawn={e.maySpawn}
-//            hubId={this.props.hubId}
-//          />
-//        );
+      //      case "image":
+      //        return (
+      //          <ImageMessage
+      //            key={e.key}
+      //            name={e.name}
+      //            className={classNames(entryClasses, styles.media)}
+      //            body={e.body}
+      //            maySpawn={e.maySpawn}
+      //          />
+      //        );
+      //      case "photo":
+      //        return (
+      //          <PhotoMessage
+      //            key={e.key}
+      //            name={e.name}
+      //            className={classNames(entryClasses, styles.media)}
+      //            body={e.body}
+      //            maySpawn={e.maySpawn}
+      //            hubId={this.props.hubId}
+      //          />
+      //        );
+      //      case "video":
+      //        return (
+      //          <VideoMessage
+      //            key={e.key}
+      //            name={e.name}
+      //            className={classNames(entryClasses, styles.media)}
+      //            body={e.body}
+      //            maySpawn={e.maySpawn}
+      //            hubId={this.props.hubId}
+      //          />
+      //        );
       case "log":
         return (
           <div key={e.key} className={classNames(entryClasses)}>
@@ -137,7 +153,7 @@ export default class PresenceLog extends Component {
     const presenceClasses = {
       [styles.presenceLog]: true,
       [styles.presenceLogInRoom]: this.props.inRoom,
-      [styles.presenceLogInRoomSelected]: this.props.showExpired
+      [styles.presenceLogInRoomSelected]: this.props.showExpired,
     };
 
     return (

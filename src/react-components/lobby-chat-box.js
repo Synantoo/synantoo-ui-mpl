@@ -8,14 +8,14 @@ import { InlineSVGButton } from "./svgi";
 class LobbyChatBox extends Component {
   static propTypes = {
     occupantCount: PropTypes.number,
-    onSendMessage: PropTypes.func
+    onSendMessage: PropTypes.func,
   };
 
   state = {
-    pendingMessage: ""
+    pendingMessage: "",
   };
 
-  sendMessage = e => {
+  sendMessage = (e) => {
     e.preventDefault();
     if (this.props.onSendMessage) {
       this.props.onSendMessage(this.state.pendingMessage);
@@ -27,7 +27,9 @@ class LobbyChatBox extends Component {
     const textRows = this.state.pendingMessage.split("\n").length;
     const pendingMessageTextareaHeight = textRows * 28 + "px";
     const pendingMessageFieldHeight = textRows * 28 + 20 + "px";
-    const occupantSnippet = `${this.props.occupantCount - 1} other${this.props.occupantCount > 2 ? "s" : ""}`;
+    const occupantSnippet = `${this.props.occupantCount - 1} other${
+      this.props.occupantCount > 2 ? "s" : ""
+    }`;
     const messageEntryPlaceholder =
       this.props.occupantCount <= 1
         ? "Nobody is here yet..."
@@ -38,18 +40,21 @@ class LobbyChatBox extends Component {
         <div
           className={classNames({
             [styles.messageEntry]: true,
-            [styles.messageEntryDisabled]: this.props.occupantCount <= 1
+            [styles.messageEntryDisabled]: this.props.occupantCount <= 1,
           })}
           style={{ height: pendingMessageFieldHeight }}
         >
           <textarea
-            className={classNames([styles.messageEntryInput, "chat-focus-target"])}
+            className={classNames([
+              styles.messageEntryInput,
+              "chat-focus-target",
+            ])}
             value={this.state.pendingMessage}
             rows={textRows}
             style={{ height: pendingMessageTextareaHeight }}
-            onChange={e => this.setState({ pendingMessage: e.target.value })}
+            onChange={(e) => this.setState({ pendingMessage: e.target.value })}
             disabled={this.props.occupantCount <= 1 ? true : false}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 this.sendMessage(e);
               } else if (e.key === "Escape") {
@@ -59,7 +64,10 @@ class LobbyChatBox extends Component {
             placeholder={messageEntryPlaceholder}
           />
           <InlineSVGButton
-            className={classNames([styles.messageEntryButton, styles.messageEntrySubmit])}
+            className={classNames([
+              styles.messageEntryButton,
+              styles.messageEntrySubmit,
+            ])}
             disabled={this.props.occupantCount <= 1 ? true : false}
             type="submit"
             src={sendMessageIcon}

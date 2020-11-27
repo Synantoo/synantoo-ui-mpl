@@ -8,30 +8,31 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
 import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
-import { InlineSVG } from "./svgi";
 
 export default class PresenceList extends Component {
   static propTypes = {
     presences: PropTypes.array,
     expanded: PropTypes.bool,
-    onExpand: PropTypes.func
+    onExpand: PropTypes.func,
   };
 
   domForPresence = (presence) => {
-    const icon = <FontAwesomeIcon icon={presence.muted ? faMicrophoneSlash : faMicrophone} />;
+    const icon = (
+      <FontAwesomeIcon
+        icon={presence.muted ? faMicrophoneSlash : faMicrophone}
+      />
+    );
     return (
-        <div className={styles.row}>
-          <div className={styles.icon}>
-            <i>{icon}</i>
-          </div>
-          <div
-            className={classNames({
-              [styles.listItem]: true
-            })}
-          >
-           <span>{presence.nametag}</span>
-          </div>
+      <div className={styles.row}>
+        <div className={styles.icon}>{icon}</div>
+        <div
+          className={classNames({
+            [styles.listItem]: true,
+          })}
+        >
+          <span>{presence.nametag}</span>
         </div>
+      </div>
     );
   };
 
@@ -51,8 +52,7 @@ export default class PresenceList extends Component {
         <div className={styles.attachPoint} />
         <div className={styles.contents}>
           <div className={styles.rows}>
-            {this.props.presences
-              .map(this.domForPresence)}
+            {this.props.presences.map(this.domForPresence)}
           </div>
         </div>
       </div>
@@ -60,20 +60,28 @@ export default class PresenceList extends Component {
   }
 
   render() {
-    const occupantCount = NAF.connection.adapter ? Object.keys(NAF.connection.adapter.occupants).length + 1 : 0;
-    const avatarEnabled = document.getElementById('remote-avatar') !== null;
+    const occupantCount = NAF.connection.adapter
+      ? Object.keys(NAF.connection.adapter.occupants).length + 1
+      : 0;
+    const avatarEnabled = document.getElementById("remote-avatar") !== null;
     return (
       <div>
         <button
           title="Members"
-          aria-label={`Toggle list of ${occupantCount} member${occupantCount === 1 ? "" : "s"}`}
-          onClick={avatarEnabled ? () => {
-            this.props.onExpand(!this.props.expanded);
-          } : null}
-          style={!avatarEnabled ? {cursor: 'auto'} : null}
+          aria-label={`Toggle list of ${occupantCount} member${
+            occupantCount === 1 ? "" : "s"
+          }`}
+          onClick={
+            avatarEnabled
+              ? () => {
+                  this.props.onExpand(!this.props.expanded);
+                }
+              : null
+          }
+          style={!avatarEnabled ? { cursor: "auto" } : null}
           className={classNames({
             [rootStyles.presenceListButton]: true,
-            [rootStyles.presenceInfoSelected]: this.props.expanded
+            [rootStyles.presenceInfoSelected]: this.props.expanded,
           })}
         >
           <FontAwesomeIcon icon={faUsers} />

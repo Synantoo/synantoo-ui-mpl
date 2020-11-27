@@ -9,41 +9,49 @@ import entryStyles from "./assets/stylesheets/entry.scss";
 import "./assets/stylesheets/hub.scss";
 
 let presenceLogEntries = [];
-const addToPresenceLog = entry => {
+const addToPresenceLog = (entry) => {
   entry.key = Date.now().toString();
 
   presenceLogEntries = [...presenceLogEntries, entry];
   remountUI({ presenceLogEntries });
-//  if (entry.type === "chat" && scene.is("loaded")) {
-//    scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_CHAT_MESSAGE);
-//  }
+  //  if (entry.type === "chat" && scene.is("loaded")) {
+  //    scene.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(SOUND_CHAT_MESSAGE);
+  //  }
 
   // Fade out and then remove
   setTimeout(() => {
     entry.expired = true;
     remountUI({ presenceLogEntries });
 
-//    setTimeout(() => {
-//      presenceLogEntries.splice(presenceLogEntries.indexOf(entry), 1);
-//      remountUI({ presenceLogEntries });
-//    }, 5000);
+    //    setTimeout(() => {
+    //      presenceLogEntries.splice(presenceLogEntries.indexOf(entry), 1);
+    //      remountUI({ presenceLogEntries });
+    //    }, 5000);
   }, 20000);
 };
 
 const fakeSendMessage = (msg, toClientId) => {
-  const pseudo = localStorage.getItem('pseudo') || 'Visiteur';
-  addToPresenceLog({ type: "chat", name: pseudo, toClientId: toClientId, body: msg });
-}
+  const pseudo = localStorage.getItem("pseudo") || "Visiteur";
+  addToPresenceLog({
+    type: "chat",
+    name: pseudo,
+    toClientId: toClientId,
+    body: msg,
+  });
+};
 
 window.app = window.app || {};
 window.app.addToPresenceLog = addToPresenceLog;
 window.app.sendMessage = window.app.sendMessage || fakeSendMessage;
 
 function mountUI(scene, props = {}) {
-  ReactDOM.render(<ChatBox { ...props } onSendMessage={window.app.sendMessage}></ChatBox>, document.getElementById("ui-root"));
+  ReactDOM.render(
+    <ChatBox {...props} onSendMessage={window.app.sendMessage}></ChatBox>,
+    document.getElementById("ui-root")
+  );
 }
 
-const remountUI = props => {
+const remountUI = (props) => {
   //uiProps = { ...uiProps, ...props };
   //mountUI(scene, uiProps);
   mountUI(null, props);
@@ -56,25 +64,25 @@ class ChatBox extends React.Component {
   };
 
   toggleShowExpired = () => {
-    this.setState((prevState) => ({showExpired: !prevState.showExpired}));
+    this.setState((prevState) => ({ showExpired: !prevState.showExpired }));
   };
 
   state = {
     expanded: false,
-    showExpired: false
-  }
+    showExpired: false,
+  };
 
   render() {
     const rootStyles = {
-        [styles.ui]: true,
-        "ui-root": true,
-        'light-theme': true
-    }
+      [styles.ui]: true,
+      "ui-root": true,
+      "light-theme": true,
+    };
     const onExpand = (expanded) => this.setState({ expanded: expanded });
     const presences = [];
-    const players = document.querySelectorAll('[player-info]');
+    const players = document.querySelectorAll("[player-info]");
     for (let i = 0; i < players.length; i++) {
-      presences.push(players[i].components['player-info'].data);
+      presences.push(players[i].components["player-info"].data);
     }
     return (
       <div className={classNames(rootStyles)}>
@@ -102,9 +110,9 @@ class ChatBox extends React.Component {
     );
   }
 }
-document.addEventListener('DOMContentLoaded', function() {
-  const scene = document.querySelector('a-scene');
-  scene.addEventListener('entered', function() {
+document.addEventListener("DOMContentLoaded", function() {
+  const scene = document.querySelector("a-scene");
+  scene.addEventListener("entered", function() {
     mountUI();
   });
 });

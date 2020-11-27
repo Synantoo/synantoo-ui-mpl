@@ -17,7 +17,7 @@ const CHAT_MESSAGE_TEXTURE_SIZE = 1024;
 
 // Hacky word wrapping, needed because the SVG conversion doesn't properly deal
 // with wrapping in Firefox for some reason. (The CSS white-space is set to pre)
-const wordWrap = body => {
+const wordWrap = (body) => {
   const maxCharsPerLine = 40;
   const words = body.split(" ");
   const outWords = [];
@@ -43,7 +43,13 @@ const wordWrap = body => {
   return outWords.join(" ");
 };
 
-const messageBodyDom = (body, from, fromSessionId, includeFromLink, history) => {
+const messageBodyDom = (
+  body,
+  from,
+  fromSessionId,
+  includeFromLink,
+  history
+) => {
   // Support wrapping text in ` to get monospace, and multiline.
   const multiLine = body.split("\n").length > 1;
   const wrapStyle = multiLine ? styles.messageWrapMulti : styles.messageWrap;
@@ -51,9 +57,13 @@ const messageBodyDom = (body, from, fromSessionId, includeFromLink, history) => 
   const messageBodyClasses = {
     [styles.messageBody]: true,
     [styles.messageBodyMulti]: multiLine,
-    [styles.messageBodyMono]: mono
+    [styles.messageBodyMono]: mono,
   };
-  const includeClientLink = includeFromLink && fromSessionId && history && NAF.clientId !== fromSessionId;
+  const includeClientLink =
+    includeFromLink &&
+    fromSessionId &&
+    history &&
+    NAF.clientId !== fromSessionId;
   //const onFromClick = includeClientLink ? () => navigateToClientInfo(history, fromSessionId) : () => {};
   const onFromClick = () => {};
 
@@ -68,13 +78,18 @@ const messageBodyDom = (body, from, fromSessionId, includeFromLink, history) => 
       {from && (
         <div
           onClick={onFromClick}
-          className={classNames({ [styles.messageSource]: true, [styles.messageSourceLink]: includeClientLink })}
+          className={classNames({
+            [styles.messageSource]: true,
+            [styles.messageSourceLink]: includeClientLink,
+          })}
         >
           {from}:
         </div>
       )}
       <div className={classNames(messageBodyClasses)}>
-        <Linkify properties={{ target: "_blank", rel: "noopener referrer" }}>{toEmojis(cleanedBody)}</Linkify>
+        <Linkify properties={{ target: "_blank", rel: "noopener referrer" }}>
+          {toEmojis(cleanedBody)}
+        </Linkify>
       </div>
     </div>
   );
@@ -104,24 +119,28 @@ function renderChatMessage(body, from, allowEmojiRender) {
       className={classNames({
         [styles.presenceLogEntry]: !isEmoji,
         [styles.presenceLogEntryOneLine]: !isEmoji && isOneLine,
-        [styles.presenceLogEmoji]: isEmoji
+        [styles.presenceLogEmoji]: isEmoji,
       })}
     >
       {messageBodyDom(body, from)}
     </div>
   );
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     ReactDOM.render(entryDom, el, () => {
       const width = el.offsetWidth;
       const height = el.offsetHeight;
       const ratio = height / width;
-      const scale = (CHAT_MESSAGE_TEXTURE_SIZE * Math.min(1.0, 1.0 / ratio)) / el.offsetWidth;
+      const scale =
+        (CHAT_MESSAGE_TEXTURE_SIZE * Math.min(1.0, 1.0 / ratio)) /
+        el.offsetWidth;
       messageCanvas.width = width * scale;
       messageCanvas.height = height * scale;
 
       const xhtml = encodeURIComponent(`
-          <svg xmlns="http://www.w3.org/2000/svg" width="${messageCanvas.width}px" height="${messageCanvas.height}px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="${
+            messageCanvas.width
+          }px" height="${messageCanvas.height}px">
             <foreignObject width="100%" height="100%" style="transform: scale(${scale});">
               ${serializeElement(el)}
             </foreignObject>
@@ -135,7 +154,7 @@ function renderChatMessage(body, from, allowEmojiRender) {
         el.remove();
         img.onload = null;
         img.src = "";
-        messageCanvas.toBlob(blob => resolve([blob, width, height]));
+        messageCanvas.toBlob((blob) => resolve([blob, width, height]));
       };
 
       img.src = "data:image/svg+xml," + xhtml;
@@ -157,7 +176,7 @@ export async function createInWorldLogMessage({ name, type, body }) {
   entity.setAttribute("is-remote-hover-target", {});
   entity.setAttribute("follow-in-fov", {
     target: "#avatar-pov-node",
-    offset: { x: 0, y: 0.0, z: -0.8 }
+    offset: { x: 0, y: 0.0, z: -0.8 },
   });
 
   const blobUrl = URL.createObjectURL(blob);
@@ -167,7 +186,7 @@ export async function createInWorldLogMessage({ name, type, body }) {
     dur: 10000,
     from: { x: 0, y: 0, z: 0 },
     to: { x: 0, y: 0.05, z: -0.05 },
-    easing: "easeOutQuad"
+    easing: "easeOutQuad",
   });
 
   entity.setAttribute("animation__spawn", {
@@ -175,7 +194,7 @@ export async function createInWorldLogMessage({ name, type, body }) {
     dur: 200,
     from: { x: 0.1, y: 0.1, z: 0.1 },
     to: { x: 1, y: 1, z: 1 },
-    easing: "easeOutElastic"
+    easing: "easeOutElastic",
   });
 
   meshEntity.setAttribute("animation__opacity", {
@@ -185,14 +204,14 @@ export async function createInWorldLogMessage({ name, type, body }) {
     dur: 8000,
     from: 1.0,
     to: 0.0,
-    easing: "easeInQuad"
+    easing: "easeInQuad",
   });
 
   meshEntity.addEventListener("animationcomplete__opacity", () => {
     entity.parentNode.removeChild(entity);
   });
 
-  textureLoader.load(blobUrl, texture => {
+  textureLoader.load(blobUrl, (texture) => {
     const material = new THREE.MeshBasicMaterial();
     material.transparent = true;
     material.map = texture;
@@ -204,14 +223,24 @@ export async function createInWorldLogMessage({ name, type, body }) {
     meshEntity.setObject3D("mesh", mesh);
     meshEntity.meshMaterial = material;
     const scaleFactor = 400;
-    meshEntity.object3DMap.mesh.scale.set(width / scaleFactor, height / scaleFactor, 1);
+    meshEntity.object3DMap.mesh.scale.set(
+      width / scaleFactor,
+      height / scaleFactor,
+      1
+    );
   });
 }
 
 export default function ChatMessage(props) {
   return (
     <div className={props.className}>
-      {messageBodyDom(props.body, props.name, props.sessionId, props.includeFromLink, props.history)}
+      {messageBodyDom(
+        props.body,
+        props.name,
+        props.sessionId,
+        props.includeFromLink,
+        props.history
+      )}
     </div>
   );
 }
@@ -223,5 +252,5 @@ ChatMessage.propTypes = {
   sessionId: PropTypes.string,
   history: PropTypes.object,
   className: PropTypes.string,
-  includeFromLink: PropTypes.bool
+  includeFromLink: PropTypes.bool,
 };

@@ -9,7 +9,10 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { handleTextFieldFocus, handleTextFieldBlur } from "../utils/focus-utils";
+import {
+  handleTextFieldFocus,
+  handleTextFieldBlur,
+} from "../utils/focus-utils";
 //import { spawnChatMessage } from "./chat-message";
 import { InlineSVGButton } from "./svgi";
 
@@ -23,17 +26,17 @@ class InWorldChatBox extends Component {
     onObjectCreated: PropTypes.func,
     history: PropTypes.object,
     enableSpawning: PropTypes.bool,
-    toggleShowExpired: PropTypes.func
+    toggleShowExpired: PropTypes.func,
   };
 
   state = {
     showRecipients: false,
     selectedRecipient: "",
     selectedRecipientName: "room",
-    pendingMessage: ""
+    pendingMessage: "",
   };
 
-  sendMessage = e => {
+  sendMessage = (e) => {
     e.preventDefault();
     if (!this.state.pendingMessage) {
       return;
@@ -49,15 +52,24 @@ class InWorldChatBox extends Component {
   };
 
   toggleRecipients = () => {
-    this.setState((prevState) => ({showRecipients: !prevState.showRecipients}));
-  }
+    this.setState((prevState) => ({
+      showRecipients: !prevState.showRecipients,
+    }));
+  };
 
   renderRecipient = (presence) => {
-    if (NAF.connection.adapter && presence.clientId === NAF.connection.adapter.clientId) {
-        return null;
+    if (
+      NAF.connection.adapter &&
+      presence.clientId === NAF.connection.adapter.clientId
+    ) {
+      return null;
     }
     return (
-      <div key={presence.clientId} className={styles.recipientRow} onClick={() => this.setSelectedRecipient(presence)}>
+      <div
+        key={presence.clientId}
+        className={styles.recipientRow}
+        onClick={() => this.setSelectedRecipient(presence)}
+      >
         {this.state.selectedRecipient === presence.clientId && (
           <i>
             <FontAwesomeIcon icon={faCheck} />
@@ -71,9 +83,12 @@ class InWorldChatBox extends Component {
   setSelectedRecipient = (presence) => {
     this.setState((prevState) => {
       if (prevState.selectedRecipient === presence.clientId) {
-        return {selectedRecipient: "", selectedRecipientName: "room"};
+        return { selectedRecipient: "", selectedRecipientName: "room" };
       } else {
-        return {selectedRecipient: presence.clientId, selectedRecipientName: presence.nametag};
+        return {
+          selectedRecipient: presence.clientId,
+          selectedRecipientName: presence.nametag,
+        };
       }
     }, this.toggleRecipients);
   };
@@ -82,12 +97,17 @@ class InWorldChatBox extends Component {
     const textRows = this.state.pendingMessage.split("\n").length;
     const pendingMessageTextareaHeight = textRows * 28 + "px";
     const pendingMessageFieldHeight = textRows * 28 + 20 + "px";
-    const discordSnippet = this.props.discordBridges.map(ch => "#" + ch).join(", ");
+    const discordSnippet = this.props.discordBridges
+      .map((ch) => "#" + ch)
+      .join(", ");
 
     return (
       <form onSubmit={this.sendMessage}>
         <div
-          className={classNames({ [styles.messageEntryInRoom]: true, [styles.messageEntryOnMobile]: isMobile })}
+          className={classNames({
+            [styles.messageEntryInRoom]: true,
+            [styles.messageEntryOnMobile]: isMobile,
+          })}
           style={{ height: pendingMessageFieldHeight }}
         >
           <input
@@ -96,7 +116,7 @@ class InWorldChatBox extends Component {
             style={{ display: "none" }}
             accept={isMobile ? "image/*" : "*"}
             multiple
-            onChange={e => {
+            onChange={(e) => {
               if (this.props.onObjectCreated) {
                 for (const file of e.target.files) {
                   this.props.onObjectCreated(file);
@@ -107,13 +127,19 @@ class InWorldChatBox extends Component {
           <button
             type="button"
             onClick={this.props.toggleShowExpired}
-            title={this.props.showExpired ? "Hide old messages" : "Show old messages"}
-            className={classNames([
-              styles.messageEntryButton,
-              styles.messageEntryButtonInRoom,
-              styles.messageEntryHistory,
-            ],
-            {[styles.messageEntryButtonInRoomSelected]: this.props.showExpired}
+            title={
+              this.props.showExpired ? "Hide old messages" : "Show old messages"
+            }
+            className={classNames(
+              [
+                styles.messageEntryButton,
+                styles.messageEntryButtonInRoom,
+                styles.messageEntryHistory,
+              ],
+              {
+                [styles.messageEntryButtonInRoomSelected]: this.props
+                  .showExpired,
+              }
             )}
           >
             <i>
@@ -123,12 +149,17 @@ class InWorldChatBox extends Component {
           <button
             type="button"
             onClick={this.toggleRecipients}
-            title={this.state.selectedRecipient ? "This will send a private message to this user" : "You can send a private message"}
-            className={classNames([
-              styles.messageEntryButton,
-              styles.messageEntryButtonInRoom,
-            ],
-            {[styles.messageEntryButtonInRoomSelected]: this.state.selectedRecipient || this.state.showRecipients}
+            title={
+              this.state.selectedRecipient
+                ? "This will send a private message to this user"
+                : "You can send a private message"
+            }
+            className={classNames(
+              [styles.messageEntryButton, styles.messageEntryButtonInRoom],
+              {
+                [styles.messageEntryButtonInRoomSelected]:
+                  this.state.selectedRecipient || this.state.showRecipients,
+              }
             )}
           >
             <i>
@@ -137,10 +168,10 @@ class InWorldChatBox extends Component {
           </button>
           {this.state.showRecipients && (
             <div className={styles.recipients}>
-              {this.renderRecipient({nametag: "room", clientId: ""})}
-              {this.props.presences
-                .map(this.renderRecipient)}
-            </div>)}
+              {this.renderRecipient({ nametag: "room", clientId: "" })}
+              {this.props.presences.map(this.renderRecipient)}
+            </div>
+          )}
           {this.props.enableSpawning && (
             <label
               htmlFor="message-entry-media-input"
@@ -148,7 +179,7 @@ class InWorldChatBox extends Component {
               className={classNames([
                 styles.messageEntryButton,
                 styles.messageEntryButtonInRoom,
-                styles.messageEntryUpload
+                styles.messageEntryUpload,
               ])}
             >
               <i>
@@ -162,32 +193,36 @@ class InWorldChatBox extends Component {
               styles.messageEntryInput,
               styles.messageEntryInputInRoom,
               "chat-focus-target",
-              !this.props.enableSpawning && styles.messageEntryInputNoSpawn
+              !this.props.enableSpawning && styles.messageEntryInputNoSpawn,
             ])}
             value={this.state.pendingMessage}
             rows={textRows}
-            onFocus={e => {
+            onFocus={(e) => {
               handleTextFieldFocus(e.target);
             }}
             onBlur={() => {
               handleTextFieldBlur();
             }}
-            onChange={e => {
+            onChange={(e) => {
               e.stopPropagation();
               this.setState({ pendingMessage: e.target.value });
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === "Enter" && !e.ctrlKey && !e.shiftKey) {
                 this.sendMessage(e);
-//              } else if (e.key === "Enter" && e.ctrlKey) {
-//                spawnChatMessage(e.target.value);
-//                this.setState({ pendingMessage: "" });
-//                e.target.blur();
+                //              } else if (e.key === "Enter" && e.ctrlKey) {
+                //                spawnChatMessage(e.target.value);
+                //                this.setState({ pendingMessage: "" });
+                //                e.target.blur();
               } else if (e.key === "Escape") {
                 e.target.blur();
               }
             }}
-            placeholder={this.props.discordBridges.length ? `Send to room and ${discordSnippet}...` : `Send to ${this.state.selectedRecipientName}...`}
+            placeholder={
+              this.props.discordBridges.length
+                ? `Send to room and ${discordSnippet}...`
+                : `Send to ${this.state.selectedRecipientName}...`
+            }
           />
           <InlineSVGButton
             type="submit"
@@ -195,7 +230,7 @@ class InWorldChatBox extends Component {
             className={classNames([
               styles.messageEntryButton,
               styles.messageEntryButtonInRoom,
-              styles.messageEntrySubmit
+              styles.messageEntrySubmit,
             ])}
             src={sendMessageIcon}
           />

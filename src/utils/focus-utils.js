@@ -13,7 +13,11 @@ export function handleTextFieldFocus(target) {
   if (!window.AFRAME) return;
   const isMobile = AFRAME.utils.device.isMobile();
 
-  if (screenfull.isFullscreen && !AFRAME.utils.device.isMobileVR() && browser.name === "firefox") {
+  if (
+    screenfull.isFullscreen &&
+    !AFRAME.utils.device.isMobileVR() &&
+    browser.name === "firefox"
+  ) {
     // This will prevent focus, but its the only way to avoid getting into a
     // weird "firefox reports full screen but actually not". You end up having to tap
     // twice to ultimately get the focus.

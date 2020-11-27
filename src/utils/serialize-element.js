@@ -14,7 +14,7 @@ const noStyleTags = {
   PARAM: true,
   SCRIPT: true,
   STYLE: true,
-  TITLE: true
+  TITLE: true,
 };
 
 // This list determines which css default values lookup tables are precomputed at load time
@@ -132,7 +132,7 @@ const tagNames = [
   "UL",
   "VAR",
   "VIDEO",
-  "WBR"
+  "WBR",
 ];
 
 function computeDefaultStyleByTagName(tagName) {
@@ -157,7 +157,9 @@ function getDefaultStyleByTagName(tagName) {
 export function warmSerializeElement() {
   for (let i = 0; i < tagNames.length; i++) {
     if (!noStyleTags[tagNames[i]]) {
-      defaultStylesByTagName[tagNames[i]] = computeDefaultStyleByTagName(tagNames[i]);
+      defaultStylesByTagName[tagNames[i]] = computeDefaultStyleByTagName(
+        tagNames[i]
+      );
     }
   }
 }
