@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
 import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
+import { faRunning } from "@fortawesome/free-solid-svg-icons/faRunning";
 
 export default class PresenceList extends Component {
   static propTypes = {
@@ -20,8 +21,11 @@ export default class PresenceList extends Component {
     const icon = (
       <FontAwesomeIcon
         icon={presence.muted ? faMicrophoneSlash : faMicrophone}
+        fixedWidth
       />
     );
+    const awayIcon = <FontAwesomeIcon icon={faRunning} />;
+
     return (
       <div className={styles.row}>
         <div className={styles.icon}>{icon}</div>
@@ -32,6 +36,7 @@ export default class PresenceList extends Component {
         >
           <span>{presence.nametag}</span>
         </div>
+        {presence.away ? <div className={styles.icon}>{awayIcon}</div> : null}
       </div>
     );
   };
