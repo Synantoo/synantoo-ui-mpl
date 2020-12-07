@@ -179,7 +179,7 @@ body.vr-mode {
   align-items: center;
   background-color: var(--menu-background-color);
   color: var(--menu-icon-color);
-  border-radius: 24px;
+  border-radius: 5px;
   border-style: none;
   border-width: 0px;
   svg {
@@ -223,8 +223,8 @@ body.vr-mode {
 :local(.presence-list-button) {
   @extend %button-with-count;
 
-  top: 16px;
-  right: 16px;
+  top: 5px;
+  right: 5px;
 }
 
 :local(.presence-info-selected) {

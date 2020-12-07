@@ -9,7 +9,7 @@
   max-width: 200px;
   background-color: var(--text-field-background-color);
   border: 1px solid var(--text-field-border-color);
-  border-radius: 16px;
+  border-radius: 5px;
   padding: 1em 1em 0.5em 1em;
 
 }
@@ -34,7 +34,7 @@
   align-items: center;
   background-color: var(--text-field-background-color);
   border: 1px solid var(--text-field-border-color);
-  border-radius: 16px;
+  border-radius: 5px;
 }
 
 :local(.message-entry-disabled) {
@@ -141,19 +141,19 @@
 
 :local(.message-entry-in-room) {
   position: absolute;
-  z-index: 2;
-  bottom: 20px;
+  z-index: 5;
+  bottom: 5px;
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   width: 95%;
-  max-width: 700px;
+  max-width: 600px;
   height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--overlay-text-field-background-color);
-  border-radius: 16px;
+  border-radius: 5px;
   pointer-events: auto;
   transition: opacity 0.15s linear;
 
@@ -183,6 +183,7 @@
   }
 }
 
+/*
 :local(.message-entry-on-mobile) {
   // Hide chatbox for joysticks
   // Orientation selector fails here when keyboard pops up on shorter screens
@@ -190,3 +191,4 @@
     display: none;
   }
 }
+*/
