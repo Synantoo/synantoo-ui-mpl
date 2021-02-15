@@ -1,9 +1,10 @@
-@import 'shared.scss';
-@import 'drop-menus.scss';
+@import "shared.scss";
+@import "drop-menus.scss";
 
 :local(.presence-list) {
   @extend %drop-menu;
-  right: 5px;
+  // right: 5px;
+  bottom: 48px;
 }
 
 :local(.attach-point) {
@@ -11,7 +12,7 @@
   top: -5px;
   right: 44px;
 
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     right: 22px;
   }
 }
@@ -78,4 +79,12 @@
   color: $action-label-color;
   margin-left: 4px;
   text-decoration: none;
+}
+
+:local(.private-message) {
+  cursor: pointer;
+}
+
+:local(.private-message-selected) {
+  color: #931ffa;
 }

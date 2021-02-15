@@ -1,4 +1,4 @@
-@import 'shared';
+@import "shared";
 
 :local(.recipients) {
   color: var(--menu-text-color);
@@ -11,7 +11,6 @@
   border: 1px solid var(--text-field-border-color);
   border-radius: 5px;
   padding: 1em 1em 0.5em 1em;
-
 }
 
 :local(.recipient-row) {
@@ -23,7 +22,6 @@
   transition: background-color 0.15s linear;
   color: $action-label-color;
 }
-
 
 :local(.message-entry) {
   position: relative;
@@ -65,7 +63,7 @@
   flex: 10;
 }
 
-:local(.message-entry-input)::placeholder{
+:local(.message-entry-input)::placeholder {
   color: var(--text-field-placeholder-color);
   font-weight: 300;
   font-style: italic;
@@ -121,7 +119,8 @@
 }
 
 :local(.message-entry-button-in-room) {
-  color: var(--overlay-text-field-widget-color);
+  // color: var(--overlay-text-field-widget-color);
+  color: #f8f9fa;
 }
 
 :local(.message-entry-button-in-room):hover {
@@ -152,7 +151,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--overlay-text-field-background-color);
+  // background-color: var(--overlay-text-field-background-color);
+  background-color: var(--overlay-text-field-focused-background-color);
   border-radius: 5px;
   pointer-events: auto;
   transition: opacity 0.15s linear;
@@ -164,7 +164,7 @@
   }
 
   :local(.message-entry-input-no-spawn) {
-    padding: 0px 1.25em;
+    padding: 0px;
   }
 
   :local(.message-entry-button-in-room) {
@@ -173,9 +173,10 @@
   }
 }
 
-:local(.message-entry-in-room):focus-within, :local(.message-entry-in-room):hover {
-  transition: background-color 0.15s linear;
-  background-color: var(--overlay-text-field-focused-background-color);
+:local(.message-entry-in-room):focus-within,
+:local(.message-entry-in-room):hover {
+  // transition: background-color 0.15s linear;
+  // background-color: var(--overlay-text-field-focused-background-color);
 
   :local(.message-entry-button-in-room) {
     border: 0;

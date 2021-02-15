@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 
 :root {
   --spoke-action-color: #{$bright-blue};
@@ -8,9 +8,9 @@
   --twitter-panel-background-color: #e6ecf0;
   --twitter-editor-border-color: #a4d9f9;
   --discord-text-color: white;
-  --discord-background-color: #2A2D32;
-  --discord-subtitle-color: #A3A3A3;
-  --discord-action-color: #7289DA;
+  --discord-background-color: #2a2d32;
+  --discord-subtitle-color: #a3a3a3;
+  --discord-action-color: #7289da;
   --discord-secondary-text-color: #{$grey-text};
   --discord-secondary-action-color: #{$darker-grey};
   --hud-panel-background: rgba(79, 79, 79, 0.45);
@@ -44,17 +44,17 @@
   --text-field-text-color: black;
   --text-field-widget-color: #{$darkest-grey};
   --text-field-background-color: white;
-  --text-field-placeholder-color: #{$dark-grey};
+  --text-field-placeholder-color: #{$light-grey};
   --text-field-disabled-color: #{$dark-grey};
   --text-field-border-color: #e2e2e2;
   --panel-action-button-secondary-background: #f4f4f4;
   --panel-background-color: #{$white-transparent};
   --panel-text-color: black;
   --panel-overlay-text-color: black;
-  --panel-overlay-background-color: rgba(0,0,0,0.85);
+  --panel-overlay-background-color: rgba(0, 0, 0, 0.85);
   --overlay-button-background-color: white;
   --overlay-button-icon-color: #{$darkest-grey}; // favorite button
-  --action-button-secondary-icon: #{$dark-grey}; // eg avatar upload button 
+  --action-button-secondary-icon: #{$dark-grey}; // eg avatar upload button
   --full-panel-background-color: rgba(255, 255, 255, 0.98);
   --menu-background-color: white;
   --menu-link-color: black;
@@ -141,11 +141,11 @@
   --panel-background-color: #{$darkest-grey-transparent};
   --panel-text-color: #{$off-white};
   --panel-overlay-text-color: black;
-  --panel-overlay-background-color: rgba(0,0,0,0.85);
+  --panel-overlay-background-color: rgba(0, 0, 0, 0.85);
   --overlay-button-background-color: rgba(50, 50, 50, 0.95);
   --overlay-button-icon-color: #{$light-grey}; // favorite button
   --unfavorited-color: #{$dark-grey};
-  --action-button-secondary-icon: #{$off-white}; // eg avatar upload button 
+  --action-button-secondary-icon: #{$off-white}; // eg avatar upload button
   --full-panel-background-color: rgba(32, 32, 32, 0.98);
   --menu-background-color: #{$darkest-grey-transparent};
   --menu-link-color: #{$off-white};

@@ -9,12 +9,46 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
 import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
 import { faUserAltSlash } from "@fortawesome/free-solid-svg-icons/faUserAltSlash";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 
 export default class PresenceList extends Component {
   static propTypes = {
     presences: PropTypes.array,
     expanded: PropTypes.bool,
     onExpand: PropTypes.func,
+    setSelectedRecipient: PropTypes.func,
+  };
+
+  renderRecipient = (presence) => {
+    if (
+      NAF.connection.adapter &&
+      presence.clientId === NAF.connection.adapter.clientId
+    ) {
+      return null;
+    }
+    return (
+      <div
+        key={presence.clientId}
+        onClick={() => this.props.setSelectedRecipient(presence)}
+      >
+        {this.props.selectedRecipient === presence.clientId ? (
+          <FontAwesomeIcon
+            icon={faPaperPlane}
+            className={classNames({
+              [styles.privateMessage]: true,
+              [styles.privateMessageSelected]: true,
+            })}
+            title="Remove from the recipients"
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faPaperPlane}
+            className={styles.privateMessage}
+            title="Send a private message to this person"
+          />
+        )}
+      </div>
+    );
   };
 
   domForPresence = (presence) => {
@@ -28,6 +62,7 @@ export default class PresenceList extends Component {
     return (
       <div className={styles.row} key={presence.clientId}>
         <div className={styles.icon}>{icon}</div>
+        {presence.away ? <div className={styles.icon}>{awayIcon}</div> : null}
         <div
           className={classNames({
             [styles.listItem]: true,
@@ -35,7 +70,7 @@ export default class PresenceList extends Component {
         >
           <span>{presence.nametag}</span>
         </div>
-        {presence.away ? <div className={styles.icon}>{awayIcon}</div> : null}
+        {this.renderRecipient(presence)}
       </div>
     );
   };
@@ -53,7 +88,7 @@ export default class PresenceList extends Component {
   renderExpandedList() {
     return (
       <div className={styles.presenceList}>
-        <div className={styles.attachPoint} />
+        {/* <div className={styles.attachPoint} /> */}
         <div className={styles.contents}>
           <div className={styles.rows}>
             {this.props.presences.map(this.domForPresence)}

@@ -7,19 +7,23 @@ import { faAt } from "@fortawesome/free-solid-svg-icons/faAt";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
-import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
+// import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
+import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   handleTextFieldFocus,
   handleTextFieldBlur,
 } from "../utils/focus-utils";
 //import { spawnChatMessage } from "./chat-message";
+import PresenceList from "./presence-list.js";
 import { InlineSVGButton } from "./svgi";
 
 const isMobile = AFRAME.utils.device.isMobile();
 
 class InWorldChatBox extends Component {
   static propTypes = {
+    expanded: PropTypes.bool,
+    onExpand: PropTypes.func,
     presences: PropTypes.array,
     discordBridges: PropTypes.array,
     onSendMessage: PropTypes.func,
@@ -32,7 +36,7 @@ class InWorldChatBox extends Component {
   state = {
     showRecipients: false,
     selectedRecipient: "",
-    selectedRecipientName: "room",
+    selectedRecipientName: "everyone",
     pendingMessage: "",
   };
 
@@ -47,6 +51,8 @@ class InWorldChatBox extends Component {
         msg = `@${this.state.selectedRecipientName} ${msg}`;
       }
       this.props.onSendMessage(msg, this.state.selectedRecipient);
+      // close present list if currently open
+      if (this.props.expanded) this.props.onExpand(false);
     }
     this.setState({ pendingMessage: "" });
   };
@@ -81,16 +87,23 @@ class InWorldChatBox extends Component {
   };
 
   setSelectedRecipient = (presence) => {
-    this.setState((prevState) => {
-      if (prevState.selectedRecipient === presence.clientId) {
-        return { selectedRecipient: "", selectedRecipientName: "room" };
-      } else {
-        return {
-          selectedRecipient: presence.clientId,
-          selectedRecipientName: presence.nametag,
-        };
+    this.setState(
+      (prevState) => {
+        if (prevState.selectedRecipient === presence.clientId) {
+          return { selectedRecipient: "", selectedRecipientName: "everyone" };
+        } else {
+          return {
+            selectedRecipient: presence.clientId,
+            selectedRecipientName: presence.nametag,
+          };
+        }
+      },
+      () => {
+        const chatInput = document.querySelector(".chat-focus-target");
+        if (chatInput) chatInput.focus();
       }
-    }, this.toggleRecipients);
+    );
+    // }, this.toggleRecipients);
   };
 
   render() {
@@ -110,6 +123,13 @@ class InWorldChatBox extends Component {
           })}
           style={{ height: pendingMessageFieldHeight }}
         >
+          <PresenceList
+            setSelectedRecipient={this.setSelectedRecipient}
+            selectedRecipient={this.state.selectedRecipient}
+            presences={this.props.presences}
+            expanded={this.props.expanded}
+            onExpand={this.props.onExpand}
+          />
           <input
             id="message-entry-media-input"
             type="file"
@@ -143,10 +163,10 @@ class InWorldChatBox extends Component {
             )}
           >
             <i>
-              <FontAwesomeIcon icon={faHistory} />
+              <FontAwesomeIcon icon={faComment} />
             </i>
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={this.toggleRecipients}
             title={
@@ -168,10 +188,10 @@ class InWorldChatBox extends Component {
           </button>
           {this.state.showRecipients && (
             <div className={styles.recipients}>
-              {this.renderRecipient({ nametag: "room", clientId: "" })}
+              {this.renderRecipient({ nametag: "everyone", clientId: "" })}
               {this.props.presences.map(this.renderRecipient)}
             </div>
-          )}
+          )} */}
           {this.props.enableSpawning && (
             <label
               htmlFor="message-entry-media-input"
@@ -221,7 +241,7 @@ class InWorldChatBox extends Component {
             placeholder={
               this.props.discordBridges.length
                 ? `Send to room and ${discordSnippet}...`
-                : `Send to ${this.state.selectedRecipientName}...`
+                : `Chat with ${this.state.selectedRecipientName}...`
             }
           />
           <InlineSVGButton

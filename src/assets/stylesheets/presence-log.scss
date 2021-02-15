@@ -23,7 +23,7 @@
 
     background-color: var(--lobby-overlay-widget-background-color);
     color: var(--lobby-overlay-widget-text-color);
-    margin: 0px 64px 8px 8px;
+    margin: 0px 8px 8px 8px;
     font-size: 0.8em;
     padding: 8px 16px;
     border-radius: 5px;
@@ -71,10 +71,10 @@
       color: $action-label-color;
     }
 
-    @media (max-width: 1000px) {
-      margin-left: 140px;
-      max-width: 75%;
-    }
+    // @media (max-width: 1000px) {
+    //   margin-left: 140px;
+    //   max-width: 75%;
+    // }
 
     :local(.icon-button) {
       appearance: none;
@@ -145,7 +145,7 @@
 
 :local(.presence-log-in-room) {
   position: absolute;
-  bottom: 90px;
+  bottom: 99px;
   z-index: 4;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -153,9 +153,12 @@
   width: 95%;
   max-width: 600px;
   max-height: 80vh;
+  border-radius: 5px;
+  padding-top: 8px;
 
   :local(.presence-log-entry) {
     background-color: var(--hud-panel-background);
+    // background-color: var(--overlay-text-field-focused-background-color);
     color: var(--hud-panel-text-color);
     min-height: 18px;
 
@@ -173,9 +176,15 @@
 }
 
 :local(.presence-log-in-room-selected) {
+  bottom: 45px;
+  // background-color: var(--hud-panel-background);
+  background-color: var(--overlay-text-field-focused-background-color);
   overflow: auto;
   pointer-events: auto;
+  z-index: 5;
   :local(.presence-log-entry) {
+    // background-color: var(--hud-panel-background);
+    background-color: inherit;
     user-select: text;
     -moz-user-select: text;
     -webkit-user-select: text;

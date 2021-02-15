@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import PresenceLog from "./react-components/presence-log.js";
-import PresenceList from "./react-components/presence-list.js";
+// import PresenceList from "./react-components/presence-list.js";
 import InWorldChatBox from "./react-components/in-world-chat-box.js";
 import styles from "./assets/stylesheets/ui-root.scss";
 import entryStyles from "./assets/stylesheets/entry.scss";
@@ -86,11 +86,11 @@ class ChatBox extends React.Component {
     }
     return (
       <div className={classNames(rootStyles)}>
-        <PresenceList
+        {/* <PresenceList
           presences={presences}
           expanded={this.state.expanded}
           onExpand={onExpand}
-        />
+        /> */}
         <PresenceLog
           showExpired={this.state.showExpired}
           entries={presenceLogEntries}
@@ -99,6 +99,8 @@ class ChatBox extends React.Component {
         />
         <div className={entryStyles.center}>
           <InWorldChatBox
+            expanded={this.state.expanded}
+            onExpand={onExpand}
             presences={presences}
             toggleShowExpired={this.toggleShowExpired}
             showExpired={this.state.showExpired}

@@ -170,14 +170,14 @@ body.vr-mode {
   @extend %unselectable;
   pointer-events: auto;
   cursor: pointer;
-  position: absolute;
+  // position: absolute;
   padding: 0px;
   z-index: 5;
   display: flex;
   align-items: center;
   background-color: var(--menu-background-color);
   color: var(--menu-icon-color);
-  border-radius: 5px;
+  border-radius: 5px 0px 0px 5px;
   border-style: none;
   border-width: 0px;
   svg {
@@ -189,19 +189,22 @@ body.vr-mode {
     font-weight: bold;
     font-family: "Open Sans", sans-serif;
   }
-  @media (min-width: 501px) {
-    width: 90px;
-    min-width: 90px;
-    height: 38px;
-    justify-content: space-evenly;
-  }
-  @media (max-width: 500px) {
-    flex-direction: column;
-    width: 52px;
-    min-width: 52px;
-    height: 72px;
-    justify-content: center;
-  }
+  width: 60px;
+  min-width: 60px;
+  justify-content: space-evenly;
+  height: 48px;
+  // @media (min-width: 501px) {
+
+  //   height: 38px;
+
+  // }
+  // @media (max-width: 500px) {
+  //   flex-direction: column;
+  //   width: 52px;
+  //   min-width: 52px;
+  //   height: 72px;
+  //   justify-content: center;
+  // }
 }
 :local(.object-list-button) {
   @extend %button-with-count;
@@ -221,12 +224,13 @@ body.vr-mode {
 :local(.presence-list-button) {
   @extend %button-with-count;
 
-  top: 10px;
-  right: 5px;
+  // top: 10px;
+  // right: 5px;
 }
 
 :local(.presence-info-selected) {
   color: $action-label-color;
+  border-radius: 0px 0px 0px 5px;
 }
 
 :local(.corner-button) {
