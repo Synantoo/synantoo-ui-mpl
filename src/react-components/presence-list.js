@@ -25,9 +25,8 @@ export default class PresenceList extends Component {
       />
     );
     const awayIcon = <FontAwesomeIcon icon={faUserAltSlash} title="Away" />;
-
     return (
-      <div className={styles.row}>
+      <div className={styles.row} key={presence.clientId}>
         <div className={styles.icon}>{icon}</div>
         <div
           className={classNames({
