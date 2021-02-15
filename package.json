@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "UI part",
   "scripts": {
-    "build": "webpack --mode=production && cp -rf dist/* ../cuisine/public/dist/ && rm -rf dist"
+    "build": "webpack --mode=production && cp -rf dist/* ../cuisine/public/dist/ && rm -rf dist",
+    "start": "webpack-dev-server --mode=development"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
