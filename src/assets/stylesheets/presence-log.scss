@@ -1,4 +1,4 @@
-@import 'shared.scss';
+@import "shared.scss";
 
 :local(.presence-log) {
   //align-self: flex-start;
@@ -102,14 +102,14 @@
       }
     }
 
-//    :local(.spawn-message) {
-//      background-image: url(../images/spawn_message.png);
-//    }
+    //    :local(.spawn-message) {
+    //      background-image: url(../images/spawn_message.png);
+    //    }
 
     // TODO replace these icons with share button
-//    :local(.share) {
-//      background-image: url(../images/share_message.png);
-//    }
+    //    :local(.share) {
+    //      background-image: url(../images/share_message.png);
+    //    }
 
     &:local(.media) {
       display: flex;
@@ -145,7 +145,7 @@
 
 :local(.presence-log-in-room) {
   position: absolute;
-  bottom: 64px;
+  bottom: 90px;
   z-index: 4;
   left: 50%;
   -webkit-transform: translateX(-50%);

@@ -1,5 +1,5 @@
-@import 'shared';
-@import 'drop-menus.scss';
+@import "shared";
+@import "drop-menus.scss";
 
 :local(.streaming-tip) {
   position: absolute;
@@ -14,7 +14,7 @@
   text-align: center;
 
   @media (max-width: 960px) {
-    display:none;
+    display: none;
   }
 
   :local(.streaming-tip-attach-point) {
@@ -27,7 +27,7 @@
     top: -5px;
   }
 
-  :local(.streaming-tip-close){
+  :local(.streaming-tip-close) {
     width: 32px;
     margin-right: 2px;
     margin-left: -16px;
@@ -36,7 +36,7 @@
     background: transparent;
     color: $notice-widget-color;
   }
-  :local(.streaming-tip-message){
+  :local(.streaming-tip-message) {
     color: $notice-text-color;
     user-select: text;
     display: flex;
@@ -44,7 +44,6 @@
     font-size: 0.8em;
   }
 }
-
 
 :local(.ui) {
   @extend %default-font;
@@ -161,12 +160,11 @@ body.vr-mode {
 
 :local(.object-list) {
   @extend %drop-menu;
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     top: 184px;
   }
   right: 16px;
 }
-
 
 %button-with-count {
   @extend %unselectable;
@@ -174,7 +172,7 @@ body.vr-mode {
   cursor: pointer;
   position: absolute;
   padding: 0px;
-  z-index: 1;
+  z-index: 5;
   display: flex;
   align-items: center;
   background-color: var(--menu-background-color);
@@ -189,15 +187,15 @@ body.vr-mode {
   span {
     font-size: 22px;
     font-weight: bold;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
   }
-  @media(min-width: 501px) {
+  @media (min-width: 501px) {
     width: 90px;
     min-width: 90px;
-    height: 44px;
+    height: 38px;
     justify-content: space-evenly;
   }
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     flex-direction: column;
     width: 52px;
     min-width: 52px;
@@ -208,13 +206,13 @@ body.vr-mode {
 :local(.object-list-button) {
   @extend %button-with-count;
 
-  @media(min-width: 501px) {
+  @media (min-width: 501px) {
     top: 16px;
     right: 122px;
     justify-content: space-evenly;
   }
 
-  @media(max-width: 500px) {
+  @media (max-width: 500px) {
     right: 16px;
     top: 96px;
   }
@@ -223,7 +221,7 @@ body.vr-mode {
 :local(.presence-list-button) {
   @extend %button-with-count;
 
-  top: 5px;
+  top: 10px;
   right: 5px;
 }
 
@@ -329,7 +327,7 @@ body.vr-mode {
 }
 
 :local(.avatar-editor) {
-  position:absolute;
+  position: absolute;
   background: var(--full-panel-background-color);
   top: 0;
   left: 0;
