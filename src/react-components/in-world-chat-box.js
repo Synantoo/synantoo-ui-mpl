@@ -114,6 +114,10 @@ class InWorldChatBox extends Component {
       .map((ch) => "#" + ch)
       .join(", ");
 
+    const isModerator = window.app.isModerator
+      ? window.app.isModerator()
+      : false;
+
     return (
       <form onSubmit={this.sendMessage}>
         <div
@@ -129,6 +133,7 @@ class InWorldChatBox extends Component {
             presences={this.props.presences}
             expanded={this.props.expanded}
             onExpand={this.props.onExpand}
+            isModerator={isModerator}
           />
           <input
             id="message-entry-media-input"

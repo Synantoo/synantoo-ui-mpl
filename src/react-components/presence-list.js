@@ -8,8 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
 import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
-import { faUserAltSlash } from "@fortawesome/free-solid-svg-icons/faUserAltSlash";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
+
+const emptyIcon = <div className={styles.icon}></div>;
 
 export default class PresenceList extends Component {
   static propTypes = {
@@ -17,6 +17,7 @@ export default class PresenceList extends Component {
     expanded: PropTypes.bool,
     onExpand: PropTypes.func,
     setSelectedRecipient: PropTypes.func,
+    isModerator: PropTypes.bool,
   };
 
   renderRecipient = (presence) => {
@@ -24,45 +25,129 @@ export default class PresenceList extends Component {
       NAF.connection.adapter &&
       presence.clientId === NAF.connection.adapter.clientId
     ) {
-      return null;
+      return emptyIcon;
     }
     return (
-      <div
-        key={presence.clientId}
+      <button
+        className="btn btn-light btn-sm-icon"
         onClick={() => this.props.setSelectedRecipient(presence)}
+        title={
+          this.props.selectedRecipient === presence.clientId
+            ? "Remove from the recipients"
+            : "Send a private message to this person"
+        }
       >
         {this.props.selectedRecipient === presence.clientId ? (
-          <FontAwesomeIcon
-            icon={faPaperPlane}
-            className={classNames({
-              [styles.privateMessage]: true,
-              [styles.privateMessageSelected]: true,
-            })}
-            title="Remove from the recipients"
-          />
+          <i className="fs fs-chat fs-active"></i>
         ) : (
-          <FontAwesomeIcon
-            icon={faPaperPlane}
-            className={styles.privateMessage}
-            title="Send a private message to this person"
-          />
+          // <FontAwesomeIcon
+          //   icon={faPaperPlane}
+          //   className={classNames({
+          //     [styles.privateMessage]: true,
+          //     [styles.privateMessageSelected]: true,
+          //   })}
+          // />
+          <i className="fs fs-chat"></i>
+          // <FontAwesomeIcon
+          //   icon={faPaperPlane}
+          //   className={styles.privateMessage}
+          // />
         )}
-      </div>
+      </button>
     );
   };
 
+  renderHandUp = (presence) => {
+    if (!this.props.isModerator) {
+      return emptyIcon;
+    }
+    if (presence.role === "moderator") {
+      return emptyIcon;
+    }
+    const handUpIcon = <i className="fs fs-handup"></i>;
+    if (presence.handup) {
+      return (
+        <div className={styles.icon} title="This person wants to talk">
+          {handUpIcon}
+        </div>
+      );
+    } else {
+      return emptyIcon;
+    }
+  };
+
+  renderRole = (presence) => {
+    const moderatorIcon = <i className="fs fs-moderator"></i>;
+    const notModeratorIcon = <i className="fs fs-moderator-regular"></i>;
+    if (this.props.isModerator) {
+      if (presence.role === "moderator") {
+        if (presence.clientId === NAF.clientId) {
+          return (
+            <div className={styles.icon} title="This person is moderator">
+              {moderatorIcon}
+            </div>
+          );
+        } else {
+          return (
+            <button
+              className="btn btn-light btn-sm-icon"
+              onClick={() => this.sendDemote(presence.clientId)}
+              title="Demote this person"
+            >
+              {moderatorIcon}
+            </button>
+          );
+        }
+      } else {
+        return (
+          <button
+            className="btn btn-light btn-sm-icon"
+            onClick={() => this.sendPromote(presence.clientId)}
+            title="Promote this person"
+          >
+            {notModeratorIcon}
+          </button>
+        );
+      }
+    } else {
+      if (presence.role === "moderator") {
+        return (
+          <div className={styles.icon} title="This person is moderator">
+            {moderatorIcon}
+          </div>
+        );
+      }
+    }
+    return emptyIcon;
+  };
+
   domForPresence = (presence) => {
-    const icon = (
+    const micIcon = (
       <FontAwesomeIcon
         icon={presence.muted ? faMicrophoneSlash : faMicrophone}
         fixedWidth
       />
     );
-    const awayIcon = <FontAwesomeIcon icon={faUserAltSlash} title="Away" />;
+    const awayIcon = <i className="fs fs-away"></i>;
     return (
       <div className={styles.row} key={presence.clientId}>
-        <div className={styles.icon}>{icon}</div>
-        {presence.away ? <div className={styles.icon}>{awayIcon}</div> : null}
+        {this.props.isModerator &&
+        !presence.muted &&
+        presence.role !== "moderator" ? (
+          <button
+            className="btn btn-light btn-sm-icon"
+            onClick={() => this.sendMute(presence.clientId)}
+          >
+            {micIcon}
+          </button>
+        ) : (
+          <div className={styles.icon}>{micIcon}</div>
+        )}
+        {presence.away ? (
+          <div className={styles.icon}>{awayIcon}</div>
+        ) : (
+          emptyIcon
+        )}
         <div
           className={classNames({
             [styles.listItem]: true,
@@ -71,6 +156,8 @@ export default class PresenceList extends Component {
           <span>{presence.nametag}</span>
         </div>
         {this.renderRecipient(presence)}
+        {this.renderHandUp(presence)}
+        {this.renderRole(presence)}
       </div>
     );
   };
@@ -85,13 +172,51 @@ export default class PresenceList extends Component {
     );
   }
 
+  sendMute(toClientId) {
+    const data = { type: "action", eventType: "mute" };
+    NAF.connection.sendDataGuaranteed(toClientId, "chatbox", data);
+  }
+
+  sendMuteAll(e) {
+    e.preventDefault();
+    const data = { type: "action", eventType: "mute" };
+    NAF.connection.broadcastDataGuaranteed("chatbox", data);
+  }
+
+  sendPromote(toClientId) {
+    const data = { type: "action", eventType: "promote" };
+    NAF.connection.sendDataGuaranteed(toClientId, "chatbox", data);
+  }
+  sendDemote(toClientId) {
+    const data = { type: "action", eventType: "demote" };
+    NAF.connection.sendDataGuaranteed(toClientId, "chatbox", data);
+  }
+
   renderExpandedList() {
+    const presences = this.props.presences.sort((a, b) => {
+      if (a.nametag < b.nametag) {
+        return -1;
+      } else if (a.nametag === b.nametag) {
+        return 0;
+      } else {
+        return 1;
+      }
+    });
     return (
       <div className={styles.presenceList}>
         {/* <div className={styles.attachPoint} /> */}
         <div className={styles.contents}>
+          {this.props.isModerator ? (
+            <button
+              className="btn btn-light btn-sm"
+              style={{ marginLeft: "-10px" }}
+              onClick={this.sendMuteAll}
+            >
+              Mute all
+            </button>
+          ) : null}
           <div className={styles.rows}>
-            {this.props.presences.map(this.domForPresence)}
+            {presences.map(this.domForPresence)}
           </div>
         </div>
       </div>
@@ -102,6 +227,10 @@ export default class PresenceList extends Component {
     const occupantCount = NAF.connection.adapter
       ? Object.keys(NAF.connection.adapter.occupants).length + 1
       : 0;
+    let numberOfHandsUp = 0;
+    this.props.presences.forEach((p) => {
+      if (p.handup) numberOfHandsUp += 1;
+    });
     const avatarEnabled = document.getElementById("remote-avatar") !== null;
     return (
       <div>
@@ -126,6 +255,18 @@ export default class PresenceList extends Component {
           <FontAwesomeIcon icon={faUsers} />
           <span className={rootStyles.occupantCount}>{occupantCount}</span>
         </button>
+        {!this.props.expanded &&
+        this.props.isModerator &&
+        numberOfHandsUp > 0 ? (
+          <div
+            className={classNames({
+              [rootStyles.handsUpCounter]: true,
+            })}
+          >
+            <i className="fs fs-handup fs-active"></i>
+            <span className={rootStyles.occupantCount}>{numberOfHandsUp}</span>
+          </div>
+        ) : null}
         {this.props.expanded && this.renderExpandedList()}
       </div>
     );

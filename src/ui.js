@@ -30,6 +30,10 @@ const addToPresenceLog = (entry) => {
   }, 20000);
 };
 
+const forceReactUpdate = () => {
+  remountUI({ presenceLogEntries });
+};
+
 const fakeSendMessage = (msg, toClientId) => {
   const pseudo = localStorage.getItem("pseudo") || "Visiteur";
   addToPresenceLog({
@@ -43,8 +47,10 @@ const fakeSendMessage = (msg, toClientId) => {
 window.app = window.app || {};
 window.app.addToPresenceLog = addToPresenceLog;
 window.app.sendMessage = window.app.sendMessage || fakeSendMessage;
+window.app.forceReactUpdate = forceReactUpdate;
 
 function mountUI(scene, props = {}) {
+  if (!document.body.classList.contains("entered")) return;
   ReactDOM.render(
     <ChatBox {...props} onSendMessage={window.app.sendMessage}></ChatBox>,
     document.getElementById("ui-root")
