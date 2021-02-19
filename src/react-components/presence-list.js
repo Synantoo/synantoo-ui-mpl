@@ -58,12 +58,6 @@ export default class PresenceList extends Component {
   };
 
   renderHandUp = (presence) => {
-    if (!this.props.isModerator) {
-      return emptyIcon;
-    }
-    if (presence.role === "moderator") {
-      return emptyIcon;
-    }
     const handUpIcon = <i className="fs fs-handup"></i>;
     if (presence.handup) {
       return (
@@ -255,9 +249,7 @@ export default class PresenceList extends Component {
           <FontAwesomeIcon icon={faUsers} />
           <span className={rootStyles.occupantCount}>{occupantCount}</span>
         </button>
-        {!this.props.expanded &&
-        this.props.isModerator &&
-        numberOfHandsUp > 0 ? (
+        {!this.props.expanded && numberOfHandsUp > 0 ? (
           <div
             className={classNames({
               [rootStyles.handsUpCounter]: true,
