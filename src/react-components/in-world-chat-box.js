@@ -3,18 +3,14 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "../assets/stylesheets/message-entry.scss";
 import sendMessageIcon from "../assets/images/send_message.svgi";
-import { faAt } from "@fortawesome/free-solid-svg-icons/faAt";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
-import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
-// import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory";
 import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   handleTextFieldFocus,
   handleTextFieldBlur,
 } from "../utils/focus-utils";
-//import { spawnChatMessage } from "./chat-message";
 import PresenceList from "./presence-list.js";
 import { InlineSVGButton } from "./svgi";
 
@@ -25,7 +21,6 @@ class InWorldChatBox extends Component {
     expanded: PropTypes.bool,
     onExpand: PropTypes.func,
     presences: PropTypes.array,
-    discordBridges: PropTypes.array,
     onSendMessage: PropTypes.func,
     onObjectCreated: PropTypes.func,
     history: PropTypes.object,
@@ -34,9 +29,8 @@ class InWorldChatBox extends Component {
   };
 
   state = {
-    showRecipients: false,
-    selectedRecipient: "",
-    selectedRecipientName: "everyone",
+    selectedRecipients: [],
+    selectedRecipientsNames: [],
     pendingMessage: "",
   };
 
@@ -47,49 +41,34 @@ class InWorldChatBox extends Component {
     }
     if (this.props.onSendMessage) {
       let msg = this.state.pendingMessage;
-      if (this.state.selectedRecipient) {
-        msg = `@${this.state.selectedRecipientName} ${msg}`;
+      if (this.state.selectedRecipients.length > 0) {
+        const recipientIds = [];
+        const recipientNames = [];
+        this.state.selectedRecipients.forEach((clientId) => {
+          const nametag = this.props.presences.find(
+            (p) => p.clientId === clientId
+          )?.nametag;
+          if (nametag) {
+            recipientIds.push(clientId);
+            recipientNames.push(nametag);
+          }
+        });
+        msg = `@${recipientNames.join(" @")} (in private) ${msg}`;
+        this.props.onSendMessage(msg, recipientIds);
+      } else {
+        this.props.onSendMessage(msg, null);
       }
-      this.props.onSendMessage(msg, this.state.selectedRecipient);
+
       // close present list if currently open
       if (this.props.expanded) this.props.onExpand(false);
     }
     this.setState({ pendingMessage: "" });
   };
 
-  toggleRecipients = () => {
-    this.setState((prevState) => ({
-      showRecipients: !prevState.showRecipients,
-    }));
-  };
-
-  renderRecipient = (presence) => {
-    if (
-      NAF.connection.adapter &&
-      presence.clientId === NAF.connection.adapter.clientId
-    ) {
-      return null;
-    }
-    return (
-      <div
-        key={presence.clientId}
-        className={styles.recipientRow}
-        onClick={() => this.setSelectedRecipient(presence)}
-      >
-        {this.state.selectedRecipient === presence.clientId && (
-          <i>
-            <FontAwesomeIcon icon={faCheck} />
-          </i>
-        )}
-        <span>{presence.nametag}</span>
-      </div>
-    );
-  };
-
   clearSelectedRecipients = () => {
     this.setState(
       (prevState) => {
-        return { selectedRecipient: "", selectedRecipientName: "everyone" };
+        return { selectedRecipients: [], selectedRecipientsNames: [] };
       },
       () => {
         const chatInput = document.querySelector(".chat-focus-target");
@@ -98,34 +77,43 @@ class InWorldChatBox extends Component {
     );
   };
 
-  setSelectedRecipient = (presence) => {
+  toggleRecipient = (clientId) => {
     this.setState(
       (prevState) => {
-        if (prevState.selectedRecipient === presence.clientId) {
-          return { selectedRecipient: "", selectedRecipientName: "everyone" };
+        let selectedRecipients;
+        if (prevState.selectedRecipients.indexOf(clientId) > -1) {
+          selectedRecipients = prevState.selectedRecipients.filter(
+            (c) => c !== clientId
+          );
         } else {
-          return {
-            selectedRecipient: presence.clientId,
-            selectedRecipientName: presence.nametag,
-          };
+          selectedRecipients = [...prevState.selectedRecipients, clientId];
         }
+
+        const recipientNames = [];
+        selectedRecipients.forEach((clientId) => {
+          const nametag = this.props.presences.find(
+            (p) => p.clientId === clientId
+          )?.nametag;
+          if (nametag) {
+            recipientNames.push(nametag);
+          }
+        });
+        return {
+          selectedRecipients: selectedRecipients,
+          selectedRecipientsNames: recipientNames,
+        };
       },
       () => {
         const chatInput = document.querySelector(".chat-focus-target");
         if (chatInput) chatInput.focus();
       }
     );
-    // }, this.toggleRecipients);
   };
 
   render() {
     const textRows = this.state.pendingMessage.split("\n").length;
     const pendingMessageTextareaHeight = textRows * 28 + "px";
     const pendingMessageFieldHeight = textRows * 28 + 20 + "px";
-    const discordSnippet = this.props.discordBridges
-      .map((ch) => "#" + ch)
-      .join(", ");
-
     const isModerator = window.app.isModerator
       ? window.app.isModerator()
       : false;
@@ -140,9 +128,9 @@ class InWorldChatBox extends Component {
           style={{ height: pendingMessageFieldHeight }}
         >
           <PresenceList
-            setSelectedRecipient={this.setSelectedRecipient}
+            toggleRecipient={this.toggleRecipient}
             clearSelectedRecipients={this.clearSelectedRecipients}
-            selectedRecipient={this.state.selectedRecipient}
+            selectedRecipients={this.state.selectedRecipients}
             presences={this.props.presences}
             expanded={this.props.expanded}
             onExpand={this.props.onExpand}
@@ -184,32 +172,6 @@ class InWorldChatBox extends Component {
               <FontAwesomeIcon icon={faComment} />
             </i>
           </button>
-          {/* <button
-            type="button"
-            onClick={this.toggleRecipients}
-            title={
-              this.state.selectedRecipient
-                ? "This will send a private message to this user"
-                : "You can send a private message"
-            }
-            className={classNames(
-              [styles.messageEntryButton, styles.messageEntryButtonInRoom],
-              {
-                [styles.messageEntryButtonInRoomSelected]:
-                  this.state.selectedRecipient || this.state.showRecipients,
-              }
-            )}
-          >
-            <i>
-              <FontAwesomeIcon icon={faAt} />
-            </i>
-          </button>
-          {this.state.showRecipients && (
-            <div className={styles.recipients}>
-              {this.renderRecipient({ nametag: "everyone", clientId: "" })}
-              {this.props.presences.map(this.renderRecipient)}
-            </div>
-          )} */}
           {this.props.enableSpawning && (
             <label
               htmlFor="message-entry-media-input"
@@ -257,11 +219,17 @@ class InWorldChatBox extends Component {
               }
             }}
             placeholder={
-              this.props.discordBridges.length
-                ? `Send to room and ${discordSnippet}...`
-                : `Chat with ${this.state.selectedRecipientName}...`
+              this.state.selectedRecipients.length === 0
+                ? `Chat with everyone`
+                : `Chat with selected persons`
             }
           />
+          {this.state.selectedRecipientsNames.length > 0 ? (
+            <div className={styles.selectedRecipients}>
+              <span>in private to</span>{" "}
+              {this.state.selectedRecipientsNames.join(", ")}
+            </div>
+          ) : null}
           <InlineSVGButton
             type="submit"
             title={"Submit"}

@@ -88,14 +88,10 @@ export default class PresenceLog extends Component {
           </div>
         );
       case "chat":
-        let name = e.toClientId ? `${e.name} (private message to you)` : e.name;
-        if (
-          e.toClientId &&
-          NAF.connection.adapter &&
-          NAF.connection.adapter.clientId !== e.toClientId
-        ) {
-          name = `${e.name} (private message)`;
-        }
+        let name = e.name;
+        // if (e.toClientId) {
+        //   name = `${e.name} (in private)`;
+        // }
 
         return (
           <ChatMessage

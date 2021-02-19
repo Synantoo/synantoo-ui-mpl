@@ -64,9 +64,9 @@ const remountUI = (props) => {
 };
 
 class ChatBox extends React.Component {
-  sendMessage = (msg, toClientId) => {
+  sendMessage = (msg, clientIds) => {
     if (msg.length === 0) return;
-    this.props.onSendMessage(msg, toClientId);
+    this.props.onSendMessage(msg, clientIds);
   };
 
   toggleShowExpired = () => {
@@ -110,7 +110,6 @@ class ChatBox extends React.Component {
             presences={presences}
             toggleShowExpired={this.toggleShowExpired}
             showExpired={this.state.showExpired}
-            discordBridges={[]}
             onSendMessage={this.sendMessage}
           />
         </div>

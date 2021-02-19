@@ -184,6 +184,19 @@
   }
 }
 
+:local(.selected-recipients) {
+  position: absolute;
+  z-index: 6;
+  bottom: 40px;
+  left: 60px;
+  background-color: #fff;
+  padding: 5px;
+  box-shadow: 3px 3px 8px #212529;
+  span {
+    color: red;
+  }
+}
+
 /*
 :local(.message-entry-on-mobile) {
   // Hide chatbox for joysticks

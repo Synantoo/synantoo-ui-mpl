@@ -16,7 +16,9 @@ export default class PresenceList extends Component {
     presences: PropTypes.array,
     expanded: PropTypes.bool,
     onExpand: PropTypes.func,
-    setSelectedRecipient: PropTypes.func,
+    selectedRecipients: PropTypes.array,
+    clearSelectedRecipients: PropTypes.func,
+    toggleRecipient: PropTypes.func,
     isModerator: PropTypes.bool,
   };
 
@@ -30,14 +32,14 @@ export default class PresenceList extends Component {
     return (
       <button
         className="btn btn-light btn-sm-icon"
-        onClick={() => this.props.setSelectedRecipient(presence)}
+        onClick={() => this.props.toggleRecipient(presence.clientId)}
         title={
-          this.props.selectedRecipient === presence.clientId
+          this.props.selectedRecipients.indexOf(presence.clientId) > -1
             ? "Remove from the recipients"
             : "Send a private message to this person"
         }
       >
-        {this.props.selectedRecipient === presence.clientId ? (
+        {this.props.selectedRecipients.indexOf(presence.clientId) > -1 ? (
           <i className="fs fs-chat fs-active"></i>
         ) : (
           <i className="fs fs-chat"></i>
@@ -187,7 +189,6 @@ export default class PresenceList extends Component {
     });
     return (
       <div className={styles.presenceList}>
-        {/* <div className={styles.attachPoint} /> */}
         <div className={styles.contents}>
           <div className={styles.rows}>
             <div className={styles.row} key="header">
@@ -214,7 +215,7 @@ export default class PresenceList extends Component {
                 onClick={() => this.props.clearSelectedRecipients()}
                 title="Chat with everyone"
               >
-                {!this.props.selectedRecipient ? (
+                {this.props.selectedRecipients.length === 0 ? (
                   <i className="fs fs-chat fs-active"></i>
                 ) : (
                   <i className="fs fs-chat"></i>
