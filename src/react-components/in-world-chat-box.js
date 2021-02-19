@@ -5,7 +5,8 @@ import styles from "../assets/stylesheets/message-entry.scss";
 import sendMessageIcon from "../assets/images/send_message.svgi";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
-import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons/faChevronUp";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons/faChevronDown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   handleTextFieldFocus,
@@ -161,15 +162,19 @@ class InWorldChatBox extends Component {
                 styles.messageEntryButton,
                 styles.messageEntryButtonInRoom,
                 styles.messageEntryHistory,
-              ],
-              {
-                [styles.messageEntryButtonInRoomSelected]: this.props
-                  .showExpired,
-              }
+              ]
+              // {
+              //   [styles.messageEntryButtonInRoomSelected]: this.props
+              //     .showExpired,
+              // }
             )}
           >
             <i>
-              <FontAwesomeIcon icon={faComment} />
+              {this.props.showExpired ? (
+                <FontAwesomeIcon icon={faChevronDown} />
+              ) : (
+                <FontAwesomeIcon icon={faChevronUp} />
+              )}
             </i>
           </button>
           {this.props.enableSpawning && (

@@ -85,7 +85,12 @@
 }
 
 :local(.message-entry-history) {
-  margin: 0px 0px 0px 10px;
+  margin: 0;
+  position: absolute;
+  bottom: 48px;
+  background-color: var(
+    --overlay-text-field-focused-background-color
+  ) !important;
 }
 
 :local(.message-entry-spawn) {
