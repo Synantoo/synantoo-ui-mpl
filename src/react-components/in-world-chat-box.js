@@ -86,6 +86,18 @@ class InWorldChatBox extends Component {
     );
   };
 
+  clearSelectedRecipients = () => {
+    this.setState(
+      (prevState) => {
+        return { selectedRecipient: "", selectedRecipientName: "everyone" };
+      },
+      () => {
+        const chatInput = document.querySelector(".chat-focus-target");
+        if (chatInput) chatInput.focus();
+      }
+    );
+  };
+
   setSelectedRecipient = (presence) => {
     this.setState(
       (prevState) => {
@@ -129,6 +141,7 @@ class InWorldChatBox extends Component {
         >
           <PresenceList
             setSelectedRecipient={this.setSelectedRecipient}
+            clearSelectedRecipients={this.clearSelectedRecipients}
             selectedRecipient={this.state.selectedRecipient}
             presences={this.props.presences}
             expanded={this.props.expanded}

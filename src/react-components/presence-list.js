@@ -40,18 +40,7 @@ export default class PresenceList extends Component {
         {this.props.selectedRecipient === presence.clientId ? (
           <i className="fs fs-chat fs-active"></i>
         ) : (
-          // <FontAwesomeIcon
-          //   icon={faPaperPlane}
-          //   className={classNames({
-          //     [styles.privateMessage]: true,
-          //     [styles.privateMessageSelected]: true,
-          //   })}
-          // />
           <i className="fs fs-chat"></i>
-          // <FontAwesomeIcon
-          //   icon={faPaperPlane}
-          //   className={styles.privateMessage}
-          // />
         )}
       </button>
     );
@@ -200,16 +189,40 @@ export default class PresenceList extends Component {
       <div className={styles.presenceList}>
         {/* <div className={styles.attachPoint} /> */}
         <div className={styles.contents}>
-          {this.props.isModerator ? (
-            <button
-              className="btn btn-light btn-sm"
-              style={{ marginLeft: "-10px" }}
-              onClick={this.sendMuteAll}
-            >
-              Mute all
-            </button>
-          ) : null}
           <div className={styles.rows}>
+            <div className={styles.row} key="header">
+              {this.props.isModerator ? (
+                <button
+                  className="btn btn-light btn-sm"
+                  style={{
+                    marginLeft: "-10px",
+                    fontWeight: "bold",
+                    padding: "0 3px",
+                  }}
+                  onClick={this.sendMuteAll}
+                >
+                  Mute all
+                </button>
+              ) : null}
+              <div
+                className={classNames({
+                  [styles.listItem]: true,
+                })}
+              ></div>
+              <button
+                className="btn btn-light btn-sm-icon"
+                onClick={() => this.props.clearSelectedRecipients()}
+                title="Chat with everyone"
+              >
+                {!this.props.selectedRecipient ? (
+                  <i className="fs fs-chat fs-active"></i>
+                ) : (
+                  <i className="fs fs-chat"></i>
+                )}
+              </button>
+              {emptyIcon}
+              {emptyIcon}
+            </div>
             {presences.map(this.domForPresence)}
           </div>
         </div>
