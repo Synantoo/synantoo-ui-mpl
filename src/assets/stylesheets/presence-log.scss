@@ -145,7 +145,7 @@
 
 :local(.presence-log-in-room) {
   position: absolute;
-  bottom: 99px;
+  bottom: 88px;
   z-index: 4;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -176,7 +176,8 @@
 }
 
 :local(.presence-log-in-room-selected) {
-  bottom: 93px;
+  bottom: 28px;
+  padding-bottom: 60px;
   // background-color: var(--hud-panel-background);
   background-color: var(--overlay-text-field-focused-background-color);
   overflow: auto;

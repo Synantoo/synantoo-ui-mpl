@@ -161,10 +161,10 @@ class InWorldChatBox extends Component {
               [
                 styles.messageEntryButton,
                 styles.messageEntryButtonInRoom,
-                styles.messageEntryHistory,
+                styles.messageEntryButtonHistory,
               ]
               // {
-              //   [styles.messageEntryButtonInRoomSelected]: this.props
+              //   [styles.messageEntryButtonHistorySelected]: this.props
               //     .showExpired,
               // }
             )}

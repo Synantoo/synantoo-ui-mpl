@@ -84,13 +84,17 @@
   cursor: pointer;
 }
 
-:local(.message-entry-history) {
+:local(.message-entry-button-history) {
   margin: 0;
   position: absolute;
-  bottom: 48px;
+  bottom: 32px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
   background-color: var(
     --overlay-text-field-focused-background-color
   ) !important;
+  border-radius: 5px 5px 0 0;
 }
 
 :local(.message-entry-spawn) {
@@ -169,7 +173,7 @@
   }
 
   :local(.message-entry-input-no-spawn) {
-    padding: 0px;
+    padding: 0 0 0 5px;
   }
 
   :local(.message-entry-button-in-room) {
