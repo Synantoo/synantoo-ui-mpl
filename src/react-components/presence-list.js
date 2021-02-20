@@ -210,7 +210,7 @@ export default class PresenceList extends Component {
                   [styles.listItem]: true,
                 })}
               ></div>
-              <button
+              {/* <button
                 className="btn btn-light btn-sm-icon"
                 onClick={() => this.props.clearSelectedRecipients()}
                 title="Chat with everyone"
@@ -220,9 +220,11 @@ export default class PresenceList extends Component {
                 ) : (
                   <i className="fs fs-chat"></i>
                 )}
-              </button>
+              </button> */}
+              <div style={{ fontSize: "0.875rem" }}>Chat</div>
               {emptyIcon}
               {emptyIcon}
+              {/* <div style={{ fontSize: "0.875rem" }}>Moderator</div> */}
             </div>
             {presences.map(this.domForPresence)}
           </div>
