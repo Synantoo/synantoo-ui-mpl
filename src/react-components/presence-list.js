@@ -241,7 +241,6 @@ export default class PresenceList extends Component {
     this.props.presences.forEach((p) => {
       if (p.handup) numberOfHandsUp += 1;
     });
-    const avatarEnabled = document.getElementById("remote-avatar") !== null;
     return (
       <div>
         <button
@@ -249,14 +248,9 @@ export default class PresenceList extends Component {
           aria-label={`Toggle list of ${occupantCount} member${
             occupantCount === 1 ? "" : "s"
           }`}
-          onClick={
-            avatarEnabled
-              ? () => {
-                  this.props.onExpand(!this.props.expanded);
-                }
-              : null
-          }
-          style={!avatarEnabled ? { cursor: "auto" } : null}
+          onClick={() => {
+            this.props.onExpand(!this.props.expanded);
+          }}
           className={classNames({
             [rootStyles.presenceListButton]: true,
             [rootStyles.presenceInfoSelected]: this.props.expanded,
@@ -266,14 +260,17 @@ export default class PresenceList extends Component {
           <span className={rootStyles.occupantCount}>{occupantCount}</span>
         </button>
         {!this.props.expanded && numberOfHandsUp > 0 ? (
-          <div
+          <button
             className={classNames({
               [rootStyles.handsUpCounter]: true,
             })}
+            onClick={() => {
+              this.props.onExpand(!this.props.expanded);
+            }}
           >
             <i className="fs fs-handup fs-active"></i>
             <span className={rootStyles.occupantCount}>{numberOfHandsUp}</span>
-          </div>
+          </button>
         ) : null}
         {this.props.expanded && this.renderExpandedList()}
       </div>
