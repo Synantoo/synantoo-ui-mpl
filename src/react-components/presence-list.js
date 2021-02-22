@@ -221,7 +221,7 @@ export default class PresenceList extends Component {
                   <i className="fs fs-chat"></i>
                 )}
               </button> */}
-              <div style={{ fontSize: "0.875rem" }}>Chat</div>
+              <div style={{ fontSize: "0.875rem" }}>chat with</div>
               {emptyIcon}
               {emptyIcon}
               {/* <div style={{ fontSize: "0.875rem" }}>Moderator</div> */}
