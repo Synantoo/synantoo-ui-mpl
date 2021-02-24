@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "../assets/stylesheets/message-entry.scss";
+import sendMessageIcon from "../assets/images/send_message.svgi";
 import { faCamera } from "@fortawesome/free-solid-svg-icons/faCamera";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons/faChevronUp";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons/faChevronDown";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   handleTextFieldFocus,
@@ -14,6 +14,7 @@ import {
 } from "../utils/focus-utils";
 import PresenceList from "./presence-list.js";
 import RaiseHandButton from "./raise-hand-button";
+import { InlineSVGButton } from "./svgi";
 
 const isMobile = AFRAME.utils.device.isMobile();
 
@@ -236,7 +237,7 @@ class InWorldChatBox extends Component {
               {this.state.selectedRecipientsNames.join(", ")}
             </div>
           ) : null}
-          <button
+          <InlineSVGButton
             type="submit"
             title={"Submit"}
             className={classNames([
@@ -244,10 +245,8 @@ class InWorldChatBox extends Component {
               styles.messageEntryButtonInRoom,
               styles.messageEntrySubmit,
             ])}
-          >
-            <FontAwesomeIcon icon={faPaperPlane} />
-          </button>
-
+            src={sendMessageIcon}
+          />
           <RaiseHandButton />
         </div>
       </form>
