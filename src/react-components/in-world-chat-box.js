@@ -13,6 +13,7 @@ import {
   handleTextFieldBlur,
 } from "../utils/focus-utils";
 import PresenceList from "./presence-list.js";
+import RaiseHandButton from "./raise-hand-button";
 import { InlineSVGButton } from "./svgi";
 
 const isMobile = AFRAME.utils.device.isMobile();
@@ -246,6 +247,7 @@ class InWorldChatBox extends Component {
             ])}
             src={sendMessageIcon}
           />
+          <RaiseHandButton />
         </div>
       </form>
     );
