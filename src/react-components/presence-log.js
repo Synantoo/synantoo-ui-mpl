@@ -150,10 +150,11 @@ export default class PresenceLog extends Component {
       [styles.presenceLog]: true,
       [styles.presenceLogInRoom]: this.props.inRoom,
       [styles.presenceLogInRoomSelected]: this.props.showExpired,
+      "presence-log-selected": this.props.showExpired,
     };
 
     return (
-      <div className={classNames(presenceClasses)}>
+      <div id="presence-log" className={classNames(presenceClasses)}>
         {this.props.entries.map(this.domForEntry)}
         <div ref={this.messagesEndRef} />
       </div>

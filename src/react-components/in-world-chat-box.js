@@ -122,6 +122,7 @@ class InWorldChatBox extends Component {
     return (
       <form onSubmit={this.sendMessage}>
         <div
+          id="message-entry"
           className={classNames({
             [styles.messageEntryInRoom]: true,
             [styles.messageEntryOnMobile]: isMobile,
