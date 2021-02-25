@@ -51,9 +51,11 @@ window.app.forceReactUpdate = forceReactUpdate;
 
 function mountUI(scene, props = {}) {
   if (!document.body.classList.contains("entered")) return;
+  const uiRoot = document.getElementById("ui-root");
+  if (!uiRoot) return;
   ReactDOM.render(
     <ChatBox {...props} onSendMessage={window.app.sendMessage}></ChatBox>,
-    document.getElementById("ui-root")
+    uiRoot
   );
 }
 
