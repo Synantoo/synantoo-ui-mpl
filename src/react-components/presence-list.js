@@ -31,6 +31,7 @@ export default class PresenceList extends Component {
     }
     return (
       <button
+        type="button"
         className="btn btn-light btn-sm-icon"
         onClick={() => this.props.toggleRecipient(presence.clientId)}
         title={
@@ -75,6 +76,7 @@ export default class PresenceList extends Component {
         } else {
           return (
             <button
+              type="button"
               className="btn btn-light btn-sm-icon"
               onClick={() => this.sendDemote(presence.clientId)}
               title="Demote this person"
@@ -86,6 +88,7 @@ export default class PresenceList extends Component {
       } else {
         return (
           <button
+            type="button"
             className="btn btn-light btn-sm-icon"
             onClick={() => this.sendPromote(presence.clientId)}
             title="Promote this person"
@@ -120,6 +123,7 @@ export default class PresenceList extends Component {
         !presence.muted &&
         presence.role !== "moderator" ? (
           <button
+            type="button"
             className="btn btn-light btn-sm-icon"
             onClick={() => this.sendMute(presence.clientId)}
           >
@@ -194,6 +198,7 @@ export default class PresenceList extends Component {
             <div className={styles.row} key="header">
               {this.props.isModerator ? (
                 <button
+                  type="button"
                   className="btn btn-light btn-sm"
                   style={{
                     marginLeft: "-10px",
@@ -211,6 +216,7 @@ export default class PresenceList extends Component {
                 })}
               ></div>
               {/* <button
+                type="button"
                 className="btn btn-light btn-sm-icon"
                 onClick={() => this.props.clearSelectedRecipients()}
                 title="Chat with everyone"
@@ -249,6 +255,7 @@ export default class PresenceList extends Component {
     return (
       <div>
         <button
+          type="button"
           title="Members"
           aria-label={`Toggle list of ${occupantCount} member${
             occupantCount === 1 ? "" : "s"
@@ -266,6 +273,7 @@ export default class PresenceList extends Component {
         </button>
         {!this.props.expanded && numberOfHandsUp > 0 ? (
           <button
+            type="button"
             className={classNames({
               [rootStyles.handsUpCounter]: true,
             })}
