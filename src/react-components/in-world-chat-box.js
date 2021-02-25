@@ -34,6 +34,7 @@ class InWorldChatBox extends Component {
     selectedRecipients: [],
     selectedRecipientsNames: [],
     pendingMessage: "",
+    currentClientTalking: null,
   };
 
   sendMessage = (e) => {
@@ -112,6 +113,24 @@ class InWorldChatBox extends Component {
     );
   };
 
+  sendYouCanTalk = (presence) => {
+    const pseudo = localStorage.getItem("pseudo");
+    const msg = `Moderator ${pseudo} gave voice to you, you can unmute yourself to talk.`;
+    const data = { type: "log", toClientId: presence.clientId, body: msg };
+    NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
+    this.setState(() => ({ currentClientTalking: presence.clientId }));
+  };
+
+  sendStopTalking = (presence) => {
+    // const pseudo = localStorage.getItem("pseudo");
+    // const msg = `Moderator ${pseudo} put you on mute.`;
+    // const data = { type: "log", toClientId: presence.clientId, body: msg };
+    // NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
+    const data = { type: "action", eventType: "handDown" };
+    NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
+    this.setState(() => ({ currentClientTalking: null }));
+  };
+
   render() {
     const textRows = this.state.pendingMessage.split("\n").length;
     const pendingMessageTextareaHeight = textRows * 28 + "px";
@@ -119,6 +138,20 @@ class InWorldChatBox extends Component {
     const isModerator = window.app.isModerator
       ? window.app.isModerator()
       : false;
+
+    const presencesHandUp = this.props.presences.filter((p) => {
+      return p.handup;
+    });
+    let firstPresenceHandUp = null;
+    if (this.state.currentClientTalking !== null) {
+      firstPresenceHandUp = presencesHandUp.find((p) => {
+        return p.clientId === this.state.currentClientTalking;
+      });
+    }
+    if (!firstPresenceHandUp) {
+      firstPresenceHandUp =
+        presencesHandUp.length > 0 ? presencesHandUp[0] : null;
+    }
 
     return (
       <form onSubmit={this.sendMessage}>
@@ -235,6 +268,34 @@ class InWorldChatBox extends Component {
             <div className={styles.selectedRecipients}>
               <span>in private to</span>{" "}
               {this.state.selectedRecipientsNames.join(", ")}
+            </div>
+          ) : null}
+          {isModerator && firstPresenceHandUp ? (
+            <div className={styles.selectedRecipients}>
+              {this.state.currentClientTalking ===
+              firstPresenceHandUp.clientId ? (
+                <>
+                  <span>voice given to {firstPresenceHandUp.nametag}</span>{" "}
+                  {/* <button
+                    type="button"
+                    className="btn btn-sm btn-primary"
+                    onClick={() => this.sendStopTalking(firstPresenceHandUp)}
+                  >
+                    STOP
+                  </button> */}
+                </>
+              ) : (
+                <>
+                  <span>give voice to {firstPresenceHandUp.nametag}</span>{" "}
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary"
+                    onClick={() => this.sendYouCanTalk(firstPresenceHandUp)}
+                  >
+                    OK
+                  </button>
+                </>
+              )}
             </div>
           ) : null}
           <InlineSVGButton
