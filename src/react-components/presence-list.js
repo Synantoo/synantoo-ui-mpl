@@ -204,6 +204,7 @@ export default class PresenceList extends Component {
                     marginLeft: "-10px",
                     fontWeight: "bold",
                     padding: "0 3px",
+                    boxShadow: "2px 2px 2px #ccc",
                   }}
                   onClick={this.sendMuteAll}
                 >
