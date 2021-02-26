@@ -63,7 +63,7 @@ export default class PresenceList extends Component {
   };
 
   renderRole = (presence) => {
-    const moderatorIcon = <i className="fs fs-moderator"></i>;
+    const moderatorIcon = <i className="fs fs-moderator fs-active"></i>;
     const notModeratorIcon = <i className="fs fs-moderator-regular"></i>;
     if (this.props.isModerator) {
       if (presence.role === "moderator") {
@@ -124,13 +124,21 @@ export default class PresenceList extends Component {
         presence.role !== "moderator" ? (
           <button
             type="button"
-            className="btn btn-light btn-sm-icon"
+            className={classNames("btn", "btn-light", "btn-sm-icon", {
+              "primary-color": !presence.muted,
+            })}
             onClick={() => this.sendMute(presence.clientId)}
           >
             {micIcon}
           </button>
         ) : (
-          <div className={styles.icon}>{micIcon}</div>
+          <div
+            className={classNames(styles.icon, {
+              "primary-color": !presence.muted,
+            })}
+          >
+            {micIcon}
+          </div>
         )}
         {presence.away ? (
           <div className={styles.icon}>{awayIcon}</div>
