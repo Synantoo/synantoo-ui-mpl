@@ -50,7 +50,7 @@ export default class PresenceList extends Component {
   };
 
   renderHandUp = (presence) => {
-    const handUpIcon = <i className="fs fs-handup"></i>;
+    const handUpIcon = <i className="fs fs-handup fs-active"></i>;
     if (presence.handup) {
       return (
         <div className={styles.icon} title="This person wants to talk">
