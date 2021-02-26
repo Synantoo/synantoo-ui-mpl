@@ -31,6 +31,7 @@ class InWorldChatBox extends Component {
   };
 
   state = {
+    inputHasFocus: false,
     selectedRecipients: [],
     selectedRecipientsNames: [],
     pendingMessage: "",
@@ -239,9 +240,11 @@ class InWorldChatBox extends Component {
             rows={textRows}
             onFocus={(e) => {
               handleTextFieldFocus(e.target);
+              this.setState(() => ({ inputHasFocus: true }));
             }}
             onBlur={() => {
               handleTextFieldBlur();
+              this.setState(() => ({ inputHasFocus: false }));
             }}
             onChange={(e) => {
               e.stopPropagation();
@@ -264,7 +267,8 @@ class InWorldChatBox extends Component {
                 : `Chat with selected persons`
             }
           />
-          {this.state.selectedRecipientsNames.length > 0 ? (
+          {this.state.inputHasFocus &&
+          this.state.selectedRecipientsNames.length > 0 ? (
             <div className={styles.selectedRecipients}>
               <span>chat privately with</span>{" "}
               {this.state.selectedRecipientsNames.join(", ")}
