@@ -266,7 +266,7 @@ class InWorldChatBox extends Component {
           />
           {this.state.selectedRecipientsNames.length > 0 ? (
             <div className={styles.selectedRecipients}>
-              <span>in private to</span>{" "}
+              <span>chat privately with</span>{" "}
               {this.state.selectedRecipientsNames.join(", ")}
             </div>
           ) : null}
