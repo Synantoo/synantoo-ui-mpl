@@ -71,6 +71,8 @@ class InWorldChatBox extends Component {
           if (typeof _paq !== "undefined")
             _paq.push(["trackEvent", "Interactions", "Hand Up"]);
         } else {
+          // mute the mic
+          window.app.updateMicStatus(false);
           if (typeof _paq !== "undefined")
             _paq.push(["trackEvent", "Interactions", "Hand Down"]);
         }
@@ -83,6 +85,8 @@ class InWorldChatBox extends Component {
   };
 
   voiceWithdrawn = () => {
+    // mute the mic
+    window.app.updateMicStatus(false);
     this.setState(
       () => ({ handRaised: false, voiceGiven: false }),
       () => {
@@ -393,9 +397,21 @@ class InWorldChatBox extends Component {
               })}
             >
               <>
-                <span>
-                  Moderator gave voice to you, you can unmute yourself to talk.
-                </span>{" "}
+                <span>Moderator gave voice to you.</span>
+                {!window.app.voice ? (
+                  <>
+                    <span>You can unmute yourself to talk.</span>{" "}
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-primary"
+                      onClick={() => window.app.updateMicStatus(true)}
+                    >
+                      UNMUTE
+                    </button>
+                  </>
+                ) : (
+                  <span>Lower your hand when you finished talking.</span>
+                )}
               </>
             </div>
           ) : null}
