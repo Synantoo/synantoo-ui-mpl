@@ -181,7 +181,10 @@ class InWorldChatBox extends Component {
       toClientId: presence.clientId,
     };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
-    this.setState(() => ({ currentClientTalking: presence.clientId }));
+    this.setState(() => ({
+      nextPresenceHandUp: presence,
+      currentClientTalking: presence.clientId,
+    }));
   };
 
   withdrawVoice = (presence) => {
@@ -193,6 +196,7 @@ class InWorldChatBox extends Component {
     };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
     this.setState((prevState) => ({
+      nextPresenceHandUp: null,
       currentClientTalking: null,
       // presence.clientId is removed right away from the presencesHandUp array to not see the OK button for 2s
       presencesHandUp: prevState.presencesHandUp.filter((p) => {
@@ -204,23 +208,26 @@ class InWorldChatBox extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.presences !== state.prevPropsPresences) {
       let presencesHandUp = props.presences.filter((p) => {
-        return p.handup;
+        return p.handup && p.clientId !== NAF.clientId;
       });
-      let firstPresenceHandUp = null;
+
+      let nextPresenceHandUp = null;
       let currentClientTalking = state.currentClientTalking;
       if (currentClientTalking !== null) {
-        firstPresenceHandUp = presencesHandUp.find((p) => {
+        nextPresenceHandUp = presencesHandUp.find((p) => {
           return p.clientId === currentClientTalking;
         });
       }
       // if currentClientTalking is not null and currentClientTalking not in presencesHandUp, set currentClientTalking to null
-      if (!firstPresenceHandUp) {
+      if (!nextPresenceHandUp) {
         currentClientTalking = null;
       }
       return {
         prevPropsPresences: props.presences,
         presencesHandUp: presencesHandUp,
         currentClientTalking: currentClientTalking,
+        nextPresenceHandUp:
+          presencesHandUp.length > 0 ? presencesHandUp[0] : null,
       };
     }
     return null;
@@ -235,8 +242,7 @@ class InWorldChatBox extends Component {
       : false;
 
     const presencesHandUp = this.state.presencesHandUp;
-    let firstPresenceHandUp =
-      presencesHandUp.length > 0 ? presencesHandUp[0] : null;
+    let nextPresenceHandUp = this.state.nextPresenceHandUp;
 
     return (
       <form onSubmit={this.sendMessage}>
@@ -256,6 +262,7 @@ class InWorldChatBox extends Component {
             expanded={this.props.expanded}
             onExpand={this.props.onExpand}
             isModerator={isModerator}
+            giveVoice={this.giveVoice}
           />
           <input
             id="message-entry-media-input"
@@ -358,31 +365,31 @@ class InWorldChatBox extends Component {
               <span>{this.state.selectedRecipientsNames.join(", ")}</span>
             </div>
           ) : null}
-          {isModerator && firstPresenceHandUp ? (
+          {isModerator && nextPresenceHandUp ? (
             <div
               className={classNames(styles.selectedRecipients, {
                 [styles.selectedRecipientsPaddingLeft]: !this.props.expanded,
               })}
             >
               {this.state.currentClientTalking ===
-              firstPresenceHandUp.clientId ? (
+              nextPresenceHandUp.clientId ? (
                 <>
-                  <span>voice given to {firstPresenceHandUp.nametag}</span>{" "}
+                  <span>voice given to {nextPresenceHandUp.nametag}</span>{" "}
                   <button
                     type="button"
                     className="btn btn-sm btn-primary"
-                    onClick={() => this.withdrawVoice(firstPresenceHandUp)}
+                    onClick={() => this.withdrawVoice(nextPresenceHandUp)}
                   >
                     STOP
                   </button>
                 </>
               ) : (
                 <>
-                  <span>give voice to {firstPresenceHandUp.nametag}</span>{" "}
+                  <span>give voice to {nextPresenceHandUp.nametag}</span>{" "}
                   <button
                     type="button"
                     className="btn btn-sm btn-primary"
-                    onClick={() => this.giveVoice(firstPresenceHandUp)}
+                    onClick={() => this.giveVoice(nextPresenceHandUp)}
                   >
                     OK
                   </button>

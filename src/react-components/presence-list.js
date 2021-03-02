@@ -20,6 +20,7 @@ export default class PresenceList extends Component {
     clearSelectedRecipients: PropTypes.func,
     toggleRecipient: PropTypes.func,
     isModerator: PropTypes.bool,
+    giveVoice: PropTypes.func,
   };
 
   renderRecipient = (presence) => {
@@ -52,11 +53,24 @@ export default class PresenceList extends Component {
   renderHandUp = (presence) => {
     const handUpIcon = <i className="fs fs-handup fs-active"></i>;
     if (presence.handup) {
-      return (
-        <div className={styles.icon} title="This person wants to talk">
-          {handUpIcon}
-        </div>
-      );
+      if (this.props.isModerator && presence.clientId !== NAF.clientId) {
+        return (
+          <button
+            type="button"
+            className="btn btn-light btn-sm-icon"
+            onClick={() => this.props.giveVoice(presence)}
+            title="Give voice to this person"
+          >
+            {handUpIcon}
+          </button>
+        );
+      } else {
+        return (
+          <div className={styles.icon} title="This person wants to talk">
+            {handUpIcon}
+          </div>
+        );
+      }
     } else {
       return emptyIcon;
     }
