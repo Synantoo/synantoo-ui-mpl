@@ -188,9 +188,39 @@ class InWorldChatBox extends Component {
       toClientId: presence.clientId,
     };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
-    this.setState(() => ({ currentClientTalking: null }));
-    // TODO presence.clientId should be removed right away from the presencesHandUp array to not see the OK button for 2s
+    this.setState((prevState) => ({
+      currentClientTalking: null,
+      // presence.clientId is removed right away from the presencesHandUp array to not see the OK button for 2s
+      presencesHandUp: prevState.presencesHandUp.filter((p) => {
+        return p.clientId !== presence.clientId;
+      }),
+    }));
   };
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.presences !== state.prevPropsPresences) {
+      let presencesHandUp = props.presences.filter((p) => {
+        return p.handup;
+      });
+      let firstPresenceHandUp = null;
+      let currentClientTalking = state.currentClientTalking;
+      if (currentClientTalking !== null) {
+        firstPresenceHandUp = presencesHandUp.find((p) => {
+          return p.clientId === currentClientTalking;
+        });
+      }
+      // if currentClientTalking is not null and currentClientTalking not in presencesHandUp, set currentClientTalking to null
+      if (!firstPresenceHandUp) {
+        currentClientTalking = null;
+      }
+      return {
+        prevPropsPresences: props.presences,
+        presencesHandUp: presencesHandUp,
+        currentClientTalking: currentClientTalking,
+      };
+    }
+    return null;
+  }
 
   render() {
     const textRows = this.state.pendingMessage.split("\n").length;
@@ -200,20 +230,9 @@ class InWorldChatBox extends Component {
       ? window.app.isModerator()
       : false;
 
-    const presencesHandUp = this.props.presences.filter((p) => {
-      return p.handup;
-    });
-    // TODO if currentClientTalking not null and currentClientTalking not in presencesHandUp, set currentClientTalking to null
-    let firstPresenceHandUp = null;
-    if (this.state.currentClientTalking !== null) {
-      firstPresenceHandUp = presencesHandUp.find((p) => {
-        return p.clientId === this.state.currentClientTalking;
-      });
-    }
-    if (!firstPresenceHandUp) {
-      firstPresenceHandUp =
-        presencesHandUp.length > 0 ? presencesHandUp[0] : null;
-    }
+    const presencesHandUp = this.state.presencesHandUp;
+    let firstPresenceHandUp =
+      presencesHandUp.length > 0 ? presencesHandUp[0] : null;
 
     return (
       <form onSubmit={this.sendMessage}>
