@@ -2,41 +2,17 @@ import React, { Component } from "react";
 import classNames from "classnames";
 
 export default class RaiseHandButton extends Component {
-  state = {
-    enabled: false,
-  };
-
-  onClick = () => {
-    this.setState(
-      (prevState) => ({
-        enabled: !prevState.enabled,
-      }),
-      () => {
-        document
-          .getElementById("cameraRig")
-          .setAttribute("player-info", { handup: this.state.enabled });
-        if (this.state.enabled) {
-          if (typeof _paq !== "undefined")
-            _paq.push(["trackEvent", "Interactions", "Hand Up"]);
-        } else {
-          if (typeof _paq !== "undefined")
-            _paq.push(["trackEvent", "Interactions", "Hand Down"]);
-        }
-      }
-    );
-  };
-
   render() {
     const btnClasses = {
       btn: true,
       "ui-meeting": true,
-      "btn-light": !this.state.enabled,
-      "btn-primary": this.state.enabled,
+      "btn-light": !this.props.enabled,
+      "btn-primary": this.props.enabled,
     };
 
     return (
       <button
-        onClick={this.onClick}
+        onClick={this.props.onClick}
         id="handUpBtn"
         className={classNames(btnClasses)}
         style={{ margin: "0 5px" }}

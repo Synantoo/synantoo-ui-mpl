@@ -36,6 +36,61 @@ class InWorldChatBox extends Component {
     selectedRecipientsNames: [],
     pendingMessage: "",
     currentClientTalking: null,
+    voiceGiven: false,
+    handRaised: false,
+  };
+
+  componentDidMount() {
+    const scene = document.querySelector("a-scene");
+    scene.addEventListener("voiceGiven", this.voiceGiven);
+    scene.addEventListener("voiceWithdrawn", this.voiceWithdrawn);
+  }
+
+  componentWillUnmount() {
+    const scene = document.querySelector("a-scene");
+    if (scene) {
+      scene.removeEventListener("voiceGiven", this.voiceGiven);
+      scene.removeEventListener("voiceWithdrawn", this.voiceWithdrawn);
+    }
+  }
+
+  toggleHand = () => {
+    this.setState(
+      (prevState) => {
+        if (prevState.handRaised) {
+          return { handRaised: false, voiceGiven: false };
+        } else {
+          return { handRaised: true };
+        }
+      },
+      () => {
+        document
+          .getElementById("cameraRig")
+          .setAttribute("player-info", { handup: this.state.handRaised });
+        if (this.state.handRaised) {
+          if (typeof _paq !== "undefined")
+            _paq.push(["trackEvent", "Interactions", "Hand Up"]);
+        } else {
+          if (typeof _paq !== "undefined")
+            _paq.push(["trackEvent", "Interactions", "Hand Down"]);
+        }
+      }
+    );
+  };
+
+  voiceGiven = () => {
+    this.setState(() => ({ voiceGiven: true }));
+  };
+
+  voiceWithdrawn = () => {
+    this.setState(
+      () => ({ handRaised: false, voiceGiven: false }),
+      () => {
+        document
+          .getElementById("cameraRig")
+          .setAttribute("player-info", { handup: this.state.handRaised });
+      }
+    );
   };
 
   sendMessage = (e) => {
@@ -114,22 +169,27 @@ class InWorldChatBox extends Component {
     );
   };
 
-  sendYouCanTalk = (presence) => {
-    const pseudo = localStorage.getItem("pseudo");
-    const msg = `Moderator ${pseudo} gave voice to you, you can unmute yourself to talk.`;
-    const data = { type: "log", toClientId: presence.clientId, body: msg };
+  giveVoice = (presence) => {
+    const data = {
+      type: "action",
+      eventType: "giveVoice",
+      fromClientId: NAF.clientId,
+      toClientId: presence.clientId,
+    };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
     this.setState(() => ({ currentClientTalking: presence.clientId }));
   };
 
-  sendStopTalking = (presence) => {
-    // const pseudo = localStorage.getItem("pseudo");
-    // const msg = `Moderator ${pseudo} put you on mute.`;
-    // const data = { type: "log", toClientId: presence.clientId, body: msg };
-    // NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
-    const data = { type: "action", eventType: "handDown" };
+  withdrawVoice = (presence) => {
+    const data = {
+      type: "action",
+      eventType: "withdrawVoice",
+      fromClientId: NAF.clientId,
+      toClientId: presence.clientId,
+    };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
     this.setState(() => ({ currentClientTalking: null }));
+    // TODO presence.clientId should be removed right away from the presencesHandUp array to not see the OK button for 2s
   };
 
   render() {
@@ -143,6 +203,7 @@ class InWorldChatBox extends Component {
     const presencesHandUp = this.props.presences.filter((p) => {
       return p.handup;
     });
+    // TODO if currentClientTalking not null and currentClientTalking not in presencesHandUp, set currentClientTalking to null
     let firstPresenceHandUp = null;
     if (this.state.currentClientTalking !== null) {
       firstPresenceHandUp = presencesHandUp.find((p) => {
@@ -284,13 +345,13 @@ class InWorldChatBox extends Component {
               firstPresenceHandUp.clientId ? (
                 <>
                   <span>voice given to {firstPresenceHandUp.nametag}</span>{" "}
-                  {/* <button
+                  <button
                     type="button"
                     className="btn btn-sm btn-primary"
-                    onClick={() => this.sendStopTalking(firstPresenceHandUp)}
+                    onClick={() => this.withdrawVoice(firstPresenceHandUp)}
                   >
                     STOP
-                  </button> */}
+                  </button>
                 </>
               ) : (
                 <>
@@ -298,12 +359,25 @@ class InWorldChatBox extends Component {
                   <button
                     type="button"
                     className="btn btn-sm btn-primary"
-                    onClick={() => this.sendYouCanTalk(firstPresenceHandUp)}
+                    onClick={() => this.giveVoice(firstPresenceHandUp)}
                   >
                     OK
                   </button>
                 </>
               )}
+            </div>
+          ) : null}
+          {this.state.voiceGiven ? (
+            <div
+              className={classNames(styles.selectedRecipients, {
+                [styles.selectedRecipientsPaddingLeft]: !this.props.expanded,
+              })}
+            >
+              <>
+                <span>
+                  Moderator gave voice to you, you can unmute yourself to talk.
+                </span>{" "}
+              </>
             </div>
           ) : null}
           <InlineSVGButton
@@ -316,7 +390,10 @@ class InWorldChatBox extends Component {
             ])}
             src={sendMessageIcon}
           />
-          <RaiseHandButton />
+          <RaiseHandButton
+            onClick={this.toggleHand}
+            enabled={this.state.handRaised}
+          />
         </div>
       </form>
     );
