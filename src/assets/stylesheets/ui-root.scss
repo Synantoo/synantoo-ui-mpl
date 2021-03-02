@@ -230,9 +230,10 @@ body.vr-mode {
 
 :local(.hands-up-counter) {
   @extend %button-with-count;
+  z-index: 7;
   cursor: auto;
   position: absolute;
-  bottom: 40px;
+  bottom: 37px;
   left: 3px;
   border-radius: 50%;
   box-shadow: 3px 3px 8px #212529;

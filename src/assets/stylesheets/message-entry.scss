@@ -196,14 +196,22 @@
 :local(.selected-recipients) {
   position: absolute;
   z-index: 6;
+  height: 40px;
   bottom: 40px;
   left: 60px;
   background-color: #fff;
   padding: 5px;
   box-shadow: 3px 3px 8px #212529;
+  border-radius: 5px;
   span {
+    display: inline-block;
+    vertical-align: middle;
     color: $purple;
   }
+}
+:local(.selected-recipients-padding-left) {
+  left: 30px;
+  padding: 5px 5px 5px 35px;
 }
 
 /*

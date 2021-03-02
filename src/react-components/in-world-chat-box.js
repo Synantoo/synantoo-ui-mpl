@@ -271,11 +271,15 @@ class InWorldChatBox extends Component {
           this.state.selectedRecipientsNames.length > 0 ? (
             <div className={styles.selectedRecipients}>
               <span>chat privately with</span>{" "}
-              {this.state.selectedRecipientsNames.join(", ")}
+              <span>{this.state.selectedRecipientsNames.join(", ")}</span>
             </div>
           ) : null}
           {isModerator && firstPresenceHandUp ? (
-            <div className={styles.selectedRecipients}>
+            <div
+              className={classNames(styles.selectedRecipients, {
+                [styles.selectedRecipientsPaddingLeft]: !this.props.expanded,
+              })}
+            >
               {this.state.currentClientTalking ===
               firstPresenceHandUp.clientId ? (
                 <>
