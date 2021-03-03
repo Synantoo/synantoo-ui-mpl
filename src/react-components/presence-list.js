@@ -55,6 +55,8 @@ export default class PresenceList extends Component {
   renderHandUp = (presence) => {
     const voiceGivenToThisUser =
       this.props.voiceGivenClientIds.indexOf(presence.clientId) > -1;
+    const numberInQueue =
+      this.props.handRaisedClientIds.indexOf(presence.clientId) + 1;
     const handUpIcon = (
       <i
         className={classNames("fs", "fs-handup", {
@@ -80,6 +82,9 @@ export default class PresenceList extends Component {
             }
           >
             {handUpIcon}
+            {numberInQueue !== 0 && (
+              <span className={styles.handRaisedCounter}>{numberInQueue}</span>
+            )}
           </button>
         );
       } else {

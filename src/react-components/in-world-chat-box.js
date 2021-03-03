@@ -240,14 +240,32 @@ class InWorldChatBox extends Component {
 
       // sort presencesHandUp by voiceGivenClientIds
       presencesHandUp.sort((a, b) => {
-        const indexA = voiceGivenClientIds.indexOf(a.clientId);
-        const indexB = voiceGivenClientIds.indexOf(b.clientId);
+        let indexA = voiceGivenClientIds.indexOf(a.clientId);
+        let indexB = voiceGivenClientIds.indexOf(b.clientId);
         if (indexA > -1 && indexB > -1) {
           return indexA < indexB ? -1 : 1;
         } else if (indexA > -1) {
           return -1;
+        } else if (indexB > -1) {
+          return 1;
+        } else {
+          if (state.handRaisedClientIds) {
+            indexA = state.handRaisedClientIds.indexOf(a.clientId);
+            indexB = state.handRaisedClientIds.indexOf(b.clientId);
+            console.log(state.handRaisedClientIds, indexA, indexB);
+            if (indexA > -1 && indexB > -1) {
+              return indexA < indexB ? -1 : 1;
+            } else if (indexA > -1) {
+              return -1;
+            } else if (indexB > -1) {
+              return 1;
+            } else {
+              return -1; // don't change order
+            }
+          } else {
+            return -1; // don't change order
+          }
         }
-        return 1;
       });
 
       // keep clientIds of user we withdrawn until they lower their hand and we get the update
@@ -267,6 +285,7 @@ class InWorldChatBox extends Component {
       return {
         prevPropsPresences: props.presences,
         prevVoiceGivenClientIds: voiceGivenClientIds,
+        handRaisedClientIds: presencesHandUp.map((p) => p.clientId),
         presencesHandUp: presencesHandUp,
         voiceGivenClientIds: voiceGivenClientIds,
         voiceWithdrawnClientIds: voiceWithdrawnClientIds,
@@ -308,6 +327,7 @@ class InWorldChatBox extends Component {
             isModerator={isModerator}
             giveVoice={this.giveVoice}
             withdrawVoice={this.withdrawVoice}
+            handRaisedClientIds={this.state.handRaisedClientIds}
             voiceGivenClientIds={this.state.voiceGivenClientIds}
           />
           <input
