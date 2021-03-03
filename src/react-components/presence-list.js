@@ -64,7 +64,13 @@ export default class PresenceList extends Component {
         })}
       ></i>
     );
-    if (presence.handup) {
+
+    // Don't use if presence.handup here for other than myself because
+    // it may not be updated right away, use handRaisedClientIds prop.
+    if (
+      (presence.handup && presence.clientId === NAF.clientId) ||
+      numberInQueue !== 0
+    ) {
       if (this.props.isModerator && presence.clientId !== NAF.clientId) {
         return (
           <button
@@ -294,10 +300,7 @@ export default class PresenceList extends Component {
     const occupantCount = NAF.connection.adapter
       ? Object.keys(NAF.connection.adapter.occupants).length + 1
       : 0;
-    let numberOfHandsUp = 0;
-    this.props.presences.forEach((p) => {
-      if (p.handup) numberOfHandsUp += 1;
-    });
+    const numberOfHandsUp = this.props.handRaisedClientIds.length;
     return (
       <div>
         <button
