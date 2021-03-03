@@ -286,7 +286,6 @@ class InWorldChatBox extends Component {
         prevPropsPresences: props.presences,
         prevVoiceGivenClientIds: voiceGivenClientIds,
         handRaisedClientIds: presencesHandUp.map((p) => p.clientId),
-        presencesHandUp: presencesHandUp,
         voiceGivenClientIds: voiceGivenClientIds,
         voiceWithdrawnClientIds: voiceWithdrawnClientIds,
         nextPresenceHandUp:
@@ -304,7 +303,6 @@ class InWorldChatBox extends Component {
       ? window.app.isModerator()
       : false;
 
-    const presencesHandUp = this.state.presencesHandUp;
     let nextPresenceHandUp = this.state.nextPresenceHandUp;
 
     return (
