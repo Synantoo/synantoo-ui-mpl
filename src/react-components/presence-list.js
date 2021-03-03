@@ -153,22 +153,21 @@ export default class PresenceList extends Component {
   };
 
   domForPresence = (presence) => {
+    const muted = presence.muted;
     const micIcon = (
       <FontAwesomeIcon
-        icon={presence.muted ? faMicrophoneSlash : faMicrophone}
+        icon={muted ? faMicrophoneSlash : faMicrophone}
         fixedWidth
       />
     );
     const awayIcon = <i className="fs fs-away"></i>;
     return (
       <div className={styles.row} key={presence.clientId}>
-        {this.props.isModerator &&
-        !presence.muted &&
-        presence.role !== "moderator" ? (
+        {this.props.isModerator && !muted && presence.role !== "moderator" ? (
           <button
             type="button"
             className={classNames("btn", "btn-light", "btn-sm-icon", {
-              "primary-color": !presence.muted,
+              "primary-color": !muted,
             })}
             onClick={() => this.sendMute(presence.clientId)}
           >
@@ -177,7 +176,7 @@ export default class PresenceList extends Component {
         ) : (
           <div
             className={classNames(styles.icon, {
-              "primary-color": !presence.muted,
+              "primary-color": !muted,
             })}
           >
             {micIcon}
@@ -217,11 +216,18 @@ export default class PresenceList extends Component {
     NAF.connection.sendDataGuaranteed(toClientId, "chatbox", data);
   }
 
-  sendMuteAll(e) {
-    e.preventDefault();
+  sendMuteAll = () => {
+    // Set muted=true right away to not have delay to refresh the ui.
+    // This modify the same object that is on player-info component data attribute,
+    // it won't send this component update because we don't have the ownership,
+    // and it will be overridden when the user send us back the update.
+    this.props.presences.forEach((p) => {
+      if (p.role !== "moderator") p.muted = true;
+    });
+    window.app.forceReactUpdate();
     const data = { type: "action", eventType: "mute" };
     NAF.connection.broadcastDataGuaranteed("chatbox", data);
-  }
+  };
 
   sendPromote(toClientId) {
     const data = { type: "action", eventType: "promote" };
