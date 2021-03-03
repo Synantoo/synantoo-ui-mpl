@@ -35,7 +35,8 @@ class InWorldChatBox extends Component {
     selectedRecipients: [],
     selectedRecipientsNames: [],
     pendingMessage: "",
-    currentClientTalking: null,
+    voiceGivenClientIds: [],
+    voiceWithdrawnClientIds: [],
     voiceGiven: false,
     handRaised: false,
   };
@@ -97,6 +98,12 @@ class InWorldChatBox extends Component {
     );
   };
 
+  getNameForClientId = (clientId) => {
+    const nametag = this.props.presences.find((p) => p.clientId === clientId)
+      ?.nametag;
+    return nametag;
+  };
+
   sendMessage = (e) => {
     e.preventDefault();
     if (!this.state.pendingMessage) {
@@ -108,9 +115,7 @@ class InWorldChatBox extends Component {
         const recipientIds = [];
         const recipientNames = [];
         this.state.selectedRecipients.forEach((clientId) => {
-          const nametag = this.props.presences.find(
-            (p) => p.clientId === clientId
-          )?.nametag;
+          const nametag = this.getNameForClientId(clientId);
           if (nametag) {
             recipientIds.push(clientId);
             recipientNames.push(nametag);
@@ -154,9 +159,7 @@ class InWorldChatBox extends Component {
 
         const recipientNames = [];
         selectedRecipients.forEach((clientId) => {
-          const nametag = this.props.presences.find(
-            (p) => p.clientId === clientId
-          )?.nametag;
+          const nametag = this.getNameForClientId(clientId);
           if (nametag) {
             recipientNames.push(nametag);
           }
@@ -181,9 +184,11 @@ class InWorldChatBox extends Component {
       toClientId: presence.clientId,
     };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
-    this.setState(() => ({
-      nextPresenceHandUp: presence,
-      currentClientTalking: presence.clientId,
+    this.setState((prevState) => ({
+      voiceGivenClientIds: [
+        ...prevState.voiceGivenClientIds,
+        presence.clientId,
+      ],
     }));
   };
 
@@ -196,36 +201,75 @@ class InWorldChatBox extends Component {
     };
     NAF.connection.sendDataGuaranteed(presence.clientId, "chatbox", data);
     this.setState((prevState) => ({
-      nextPresenceHandUp: null,
-      currentClientTalking: null,
-      // presence.clientId is removed right away from the presencesHandUp array to not see the OK button for 2s
-      presencesHandUp: prevState.presencesHandUp.filter((p) => {
-        return p.clientId !== presence.clientId;
-      }),
+      voiceGivenClientIds: prevState.voiceGivenClientIds.filter(
+        (clientId) => clientId !== presence.clientId
+      ),
+      voiceWithdrawnClientIds: [
+        ...prevState.voiceWithdrawnClientIds,
+        presence.clientId,
+      ],
     }));
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.presences !== state.prevPropsPresences) {
+    if (
+      props.presences !== state.prevPropsPresences ||
+      state.voiceGivenClientIds !== state.prevVoiceGivenClientIds
+    ) {
       let presencesHandUp = props.presences.filter((p) => {
-        return p.handup && p.clientId !== NAF.clientId;
+        return (
+          p.handup &&
+          p.clientId !== NAF.clientId &&
+          state.voiceWithdrawnClientIds.indexOf(p.clientId) === -1
+        );
       });
 
-      let nextPresenceHandUp = null;
-      let currentClientTalking = state.currentClientTalking;
-      if (currentClientTalking !== null) {
-        nextPresenceHandUp = presencesHandUp.find((p) => {
-          return p.clientId === currentClientTalking;
-        });
-      }
-      // if currentClientTalking is not null and currentClientTalking not in presencesHandUp, set currentClientTalking to null
-      if (!nextPresenceHandUp) {
-        currentClientTalking = null;
-      }
+      const voiceGivenClientIds = state.voiceGivenClientIds.filter(
+        (clientId) => {
+          const presence = presencesHandUp.find((p) => {
+            return p.clientId === clientId;
+          });
+          // the user lowered their hand, remove it from the list
+          if (presence) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      );
+
+      // sort presencesHandUp by voiceGivenClientIds
+      presencesHandUp.sort((a, b) => {
+        const indexA = voiceGivenClientIds.indexOf(a.clientId);
+        const indexB = voiceGivenClientIds.indexOf(b.clientId);
+        if (indexA > -1 && indexB > -1) {
+          return indexA < indexB ? -1 : 1;
+        } else if (indexA > -1) {
+          return -1;
+        }
+        return 1;
+      });
+
+      // keep clientIds of user we withdrawn until they lower their hand and we get the update
+      const voiceWithdrawnClientIds = state.voiceWithdrawnClientIds.filter(
+        (clientId) => {
+          const presence = props.presences.find((p) => {
+            return p.clientId === clientId && !p.handup;
+          });
+          if (presence) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      );
+
       return {
         prevPropsPresences: props.presences,
+        prevVoiceGivenClientIds: voiceGivenClientIds,
         presencesHandUp: presencesHandUp,
-        currentClientTalking: currentClientTalking,
+        voiceGivenClientIds: voiceGivenClientIds,
+        voiceWithdrawnClientIds: voiceWithdrawnClientIds,
         nextPresenceHandUp:
           presencesHandUp.length > 0 ? presencesHandUp[0] : null,
       };
@@ -263,6 +307,8 @@ class InWorldChatBox extends Component {
             onExpand={this.props.onExpand}
             isModerator={isModerator}
             giveVoice={this.giveVoice}
+            withdrawVoice={this.withdrawVoice}
+            voiceGivenClientIds={this.state.voiceGivenClientIds}
           />
           <input
             id="message-entry-media-input"
@@ -371,17 +417,25 @@ class InWorldChatBox extends Component {
                 [styles.selectedRecipientsPaddingLeft]: !this.props.expanded,
               })}
             >
-              {this.state.currentClientTalking ===
-              nextPresenceHandUp.clientId ? (
+              {this.state.voiceGivenClientIds.indexOf(
+                nextPresenceHandUp.clientId
+              ) > -1 ? (
                 <>
-                  <span>voice given to {nextPresenceHandUp.nametag}</span>{" "}
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-primary"
-                    onClick={() => this.withdrawVoice(nextPresenceHandUp)}
-                  >
-                    STOP
-                  </button>
+                  <span>voice given to {nextPresenceHandUp.nametag}</span>
+                  {this.state.voiceGivenClientIds.length === 1 ? (
+                    <>
+                      {" "}
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-primary"
+                        onClick={() => this.withdrawVoice(nextPresenceHandUp)}
+                      >
+                        STOP
+                      </button>
+                    </>
+                  ) : (
+                    <span>, ...</span>
+                  )}
                 </>
               ) : (
                 <>
