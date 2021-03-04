@@ -341,32 +341,36 @@ class InWorldChatBox extends Component {
               }
             }}
           />
-          <button
-            type="button"
-            onClick={this.props.toggleShowExpired}
-            title={
-              this.props.showExpired ? "Hide old messages" : "Show old messages"
-            }
-            className={classNames(
-              [
-                styles.messageEntryButton,
-                styles.messageEntryButtonInRoom,
-                styles.messageEntryButtonHistory,
-              ]
-              // {
-              //   [styles.messageEntryButtonHistorySelected]: this.props
-              //     .showExpired,
-              // }
-            )}
-          >
-            <i>
-              {this.props.showExpired ? (
-                <FontAwesomeIcon icon={faChevronDown} />
-              ) : (
-                <FontAwesomeIcon icon={faChevronUp} />
+          {!this.props.expanded && (
+            <button
+              type="button"
+              onClick={this.props.toggleShowExpired}
+              title={
+                this.props.showExpired
+                  ? "Hide old messages"
+                  : "Show old messages"
+              }
+              className={classNames(
+                [
+                  styles.messageEntryButton,
+                  styles.messageEntryButtonInRoom,
+                  styles.messageEntryButtonHistory,
+                ]
+                // {
+                //   [styles.messageEntryButtonHistorySelected]: this.props
+                //     .showExpired,
+                // }
               )}
-            </i>
-          </button>
+            >
+              <i>
+                {this.props.showExpired ? (
+                  <FontAwesomeIcon icon={faChevronDown} />
+                ) : (
+                  <FontAwesomeIcon icon={faChevronUp} />
+                )}
+              </i>
+            </button>
+          )}
           {this.props.enableSpawning && (
             <label
               htmlFor="message-entry-media-input"
