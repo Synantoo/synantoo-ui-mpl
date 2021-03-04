@@ -252,7 +252,6 @@ class InWorldChatBox extends Component {
           if (state.handRaisedClientIds) {
             indexA = state.handRaisedClientIds.indexOf(a.clientId);
             indexB = state.handRaisedClientIds.indexOf(b.clientId);
-            console.log(state.handRaisedClientIds, indexA, indexB);
             if (indexA > -1 && indexB > -1) {
               return indexA < indexB ? -1 : 1;
             } else if (indexA > -1) {
