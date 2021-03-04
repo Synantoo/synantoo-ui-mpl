@@ -480,7 +480,7 @@ class InWorldChatBox extends Component {
               })}
             >
               <>
-                <span>Moderator gave voice to you.</span>
+                <span>Moderator gave voice to you.</span>{" "}
                 {!window.app.voice ? (
                   <>
                     <span>You can unmute yourself to talk.</span>{" "}
@@ -493,7 +493,10 @@ class InWorldChatBox extends Component {
                     </button>
                   </>
                 ) : (
-                  <span>Lower your hand when you finished talking.</span>
+                  <>
+                    {" "}
+                    <span>Lower your hand when you finished talking.</span>
+                  </>
                 )}
               </>
             </div>
