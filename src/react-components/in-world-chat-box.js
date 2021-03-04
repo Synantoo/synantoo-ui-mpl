@@ -56,6 +56,7 @@ class InWorldChatBox extends Component {
   }
 
   toggleHand = () => {
+    const prevVoiceGiven = this.state.voiceGiven;
     this.setState(
       (prevState) => {
         if (prevState.handRaised) {
@@ -72,8 +73,8 @@ class InWorldChatBox extends Component {
           if (typeof _paq !== "undefined")
             _paq.push(["trackEvent", "Interactions", "Hand Up"]);
         } else {
-          // mute the mic
-          window.app.updateMicStatus(false);
+          // mute the mic if we was given voice previously
+          if (prevVoiceGiven) window.app.updateMicStatus(false);
           if (typeof _paq !== "undefined")
             _paq.push(["trackEvent", "Interactions", "Hand Down"]);
         }
