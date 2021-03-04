@@ -80,13 +80,14 @@ class ChatBox extends React.Component {
     showExpired: false,
   };
 
+  onExpand = (expanded) => this.setState(() => ({ expanded: expanded }));
+
   render() {
     const rootStyles = {
       [styles.ui]: true,
       "ui-root": true,
       "light-theme": true,
     };
-    const onExpand = (expanded) => this.setState({ expanded: expanded });
     const presences = [];
     const players = document.querySelectorAll("[player-info]");
     for (let i = 0; i < players.length; i++) {
@@ -108,7 +109,7 @@ class ChatBox extends React.Component {
         <div className={entryStyles.center}>
           <InWorldChatBox
             expanded={this.state.expanded}
-            onExpand={onExpand}
+            onExpand={this.onExpand}
             presences={presences}
             toggleShowExpired={this.toggleShowExpired}
             showExpired={this.state.showExpired}
