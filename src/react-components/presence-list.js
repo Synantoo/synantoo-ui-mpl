@@ -305,9 +305,10 @@ export default class PresenceList extends Component {
   }
 
   render() {
-    const occupantCount = NAF.connection.adapter
-      ? Object.keys(NAF.connection.adapter.occupants).length + 1
-      : 0;
+    // const occupantCount = NAF.connection.adapter
+    //   ? Object.keys(NAF.connection.adapter.occupants).length + 1
+    //   : 0;
+    const occupantCount = this.props.presences.length;
     return (
       <div>
         <button
