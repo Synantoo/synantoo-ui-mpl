@@ -367,13 +367,11 @@ class InWorldChatBox extends Component {
                 // }
               )}
             >
-              <i>
-                {this.props.showExpired ? (
-                  <FontAwesomeIcon icon={faChevronDown} />
-                ) : (
-                  <FontAwesomeIcon icon={faChevronUp} />
-                )}
-              </i>
+              {this.props.showExpired ? (
+                <FontAwesomeIcon icon={faChevronDown} />
+              ) : (
+                <FontAwesomeIcon icon={faChevronUp} />
+              )}
             </button>
           )}
           {this.props.enableSpawning && (
@@ -447,7 +445,29 @@ class InWorldChatBox extends Component {
                 nextPresenceHandUp.clientId
               ) > -1 ? (
                 <>
-                  <span>voice given to {nextPresenceHandUp.nametag}</span>
+                  <span>
+                    voice given to {nextPresenceHandUp.nametag}
+                    {this.state.voiceGivenClientIds.length > 1 && ", ..."}
+                  </span>
+
+                  {this.state.handRaisedClientIds.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => this.props.onExpand(!this.props.expanded)}
+                      title={
+                        !this.props.expanded
+                          ? "Give voice to several persons"
+                          : "Close users listing"
+                      }
+                      className={classNames("btn", "btn-light")}
+                    >
+                      {this.props.expanded ? (
+                        <FontAwesomeIcon icon={faChevronDown} />
+                      ) : (
+                        <FontAwesomeIcon icon={faChevronUp} />
+                      )}
+                    </button>
+                  )}
                   {this.state.voiceGivenClientIds.length === 1 ? (
                     <>
                       {" "}
@@ -459,9 +479,7 @@ class InWorldChatBox extends Component {
                         STOP
                       </button>
                     </>
-                  ) : (
-                    <span>, ...</span>
-                  )}
+                  ) : null}
                 </>
               ) : (
                 <>

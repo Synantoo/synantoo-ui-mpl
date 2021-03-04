@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons/faMicrophone";
 import { faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons/faMicrophoneSlash";
+import { faLongArrowAltDown } from "@fortawesome/free-solid-svg-icons/faLongArrowAltDown";
 
 const emptyIcon = <div className={styles.icon}></div>;
 
@@ -290,10 +291,19 @@ export default class PresenceList extends Component {
               {presences.length > 1 ? (
                 <div style={{ fontSize: "0.875rem", marginRight: "20px" }}>
                   chat privately with{" "}
-                  <i className="fas fa-long-arrow-alt-down"></i>
+                  <FontAwesomeIcon icon={faLongArrowAltDown} />
                 </div>
               ) : null}
-              {emptyIcon}
+              {this.props.voiceGivenClientIds.length > 0 ? (
+                <div
+                  className={classNames(styles.icon, "primary-color")}
+                  style={{ fontSize: "0.875rem" }}
+                >
+                  <FontAwesomeIcon icon={faLongArrowAltDown} />
+                </div>
+              ) : (
+                emptyIcon
+              )}
               {emptyIcon}
               {/* <div style={{ fontSize: "0.875rem" }}>Moderator</div> */}
             </div>
