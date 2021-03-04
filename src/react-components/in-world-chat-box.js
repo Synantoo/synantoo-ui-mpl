@@ -305,6 +305,9 @@ class InWorldChatBox extends Component {
 
     let nextPresenceHandUp = this.state.nextPresenceHandUp;
 
+    let numberOfHandsUp = this.state.handRaisedClientIds.length;
+    if (this.state.handRaised) numberOfHandsUp += 1;
+
     return (
       <form onSubmit={this.sendMessage}>
         <div
@@ -327,6 +330,7 @@ class InWorldChatBox extends Component {
             withdrawVoice={this.withdrawVoice}
             handRaisedClientIds={this.state.handRaisedClientIds}
             voiceGivenClientIds={this.state.voiceGivenClientIds}
+            numberOfHandsUp={numberOfHandsUp}
           />
           <input
             id="message-entry-media-input"

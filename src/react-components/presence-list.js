@@ -22,7 +22,9 @@ export default class PresenceList extends Component {
     isModerator: PropTypes.bool,
     giveVoice: PropTypes.func,
     withdrawVoice: PropTypes.func,
+    handRaisedClientIds: PropTypes.array,
     voiceGivenClientIds: PropTypes.array,
+    numberOfHandsUp: PropTypes.number,
   };
 
   renderRecipient = (presence) => {
@@ -306,7 +308,6 @@ export default class PresenceList extends Component {
     const occupantCount = NAF.connection.adapter
       ? Object.keys(NAF.connection.adapter.occupants).length + 1
       : 0;
-    const numberOfHandsUp = this.props.handRaisedClientIds.length;
     return (
       <div>
         <button
@@ -326,7 +327,7 @@ export default class PresenceList extends Component {
           <FontAwesomeIcon icon={faUsers} />
           <span className={rootStyles.occupantCount}>{occupantCount}</span>
         </button>
-        {!this.props.expanded && numberOfHandsUp > 0 ? (
+        {!this.props.expanded && this.props.numberOfHandsUp > 0 ? (
           <button
             type="button"
             className={classNames({
@@ -337,7 +338,9 @@ export default class PresenceList extends Component {
             }}
           >
             <i className="fs fs-handup fs-active"></i>
-            <span className={rootStyles.occupantCount}>{numberOfHandsUp}</span>
+            <span className={rootStyles.occupantCount}>
+              {this.props.numberOfHandsUp}
+            </span>
           </button>
         ) : null}
         {this.props.expanded && this.renderExpandedList()}
