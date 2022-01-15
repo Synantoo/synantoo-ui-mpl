@@ -70,7 +70,7 @@
     "rimraf": "^2.6.2",
     "sass-loader": "^6.0.7",
     "selfsigned": "^1.10.2",
-    "shelljs": "^0.8.1",
+    "shelljs": "^0.8.5",
     "spritesheet-js": "github:mozillareality/spritesheet.js#hubs/master",
     "style-loader": "^0.20.2",
     "stylelint": "^9.10.1",
