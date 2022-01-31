@@ -11,6 +11,7 @@ import ChatMessage from "./chat-message";
 
 export default class PresenceLog extends Component {
   static propTypes = {
+    expandExpired: PropTypes.func,
     entries: PropTypes.array,
     inRoom: PropTypes.bool,
     hubId: PropTypes.string,
@@ -95,6 +96,7 @@ export default class PresenceLog extends Component {
 
         return (
           <ChatMessage
+            onClick={this.props.expandExpired}
             key={e.key}
             name={name}
             className={classNames(entryClasses)}

@@ -233,7 +233,7 @@ export async function createInWorldLogMessage({ name, type, body }) {
 
 export default function ChatMessage(props) {
   return (
-    <div className={props.className}>
+    <div className={props.className} onClick={props.onClick}>
       {messageBodyDom(
         props.body,
         props.name,
@@ -246,6 +246,7 @@ export default function ChatMessage(props) {
 }
 
 ChatMessage.propTypes = {
+  onClick: PropTypes.func,
   name: PropTypes.string,
   maySpawn: PropTypes.bool,
   body: PropTypes.string,

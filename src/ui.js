@@ -75,6 +75,11 @@ class ChatBox extends React.Component {
     this.setState((prevState) => ({ showExpired: !prevState.showExpired }));
   };
 
+  expandExpired = (e) => {
+    if (e.target.tagName === "A") return;
+    this.setState(() => ({ showExpired: true }));
+  };
+
   state = {
     expanded: false,
     showExpired: false,
@@ -101,6 +106,7 @@ class ChatBox extends React.Component {
           onExpand={onExpand}
         /> */}
         <PresenceLog
+          expandExpired={this.expandExpired}
           showExpired={this.state.showExpired}
           entries={presenceLogEntries}
           hubId={"hub_id"}
