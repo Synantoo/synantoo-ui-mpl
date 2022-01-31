@@ -9,8 +9,11 @@ import entryStyles from "./assets/stylesheets/entry.scss";
 import "./assets/stylesheets/hub.scss";
 
 let presenceLogEntries = [];
+
 const addToPresenceLog = (entry) => {
   entry.key = Date.now().toString();
+  entry.expired = false;
+  entry.viewed = document.visibilityState === "visible";
 
   presenceLogEntries = [...presenceLogEntries, entry];
   remountUI({ presenceLogEntries });
@@ -72,7 +75,14 @@ class ChatBox extends React.Component {
   };
 
   toggleShowExpired = () => {
-    this.setState((prevState) => ({ showExpired: !prevState.showExpired }));
+    this.setState((prevState) => {
+      if (prevState.showExpired) {
+        presenceLogEntries.forEach((entry) => {
+          entry.viewed = true;
+        });
+      }
+      return { showExpired: !prevState.showExpired };
+    });
   };
 
   expandExpired = (e) => {
@@ -98,6 +108,12 @@ class ChatBox extends React.Component {
     for (let i = 0; i < players.length; i++) {
       presences.push(players[i].components["player-info"].data);
     }
+
+    const totalUnread = presenceLogEntries.reduce(
+      (acc, entry) => acc + (entry.viewed ? 0 : 1),
+      0
+    );
+
     return (
       <div className={classNames(rootStyles)}>
         {/* <PresenceList
@@ -114,6 +130,7 @@ class ChatBox extends React.Component {
         />
         <div className={entryStyles.center}>
           <InWorldChatBox
+            totalUnread={totalUnread}
             expanded={this.state.expanded}
             onExpand={this.onExpand}
             presences={presences}

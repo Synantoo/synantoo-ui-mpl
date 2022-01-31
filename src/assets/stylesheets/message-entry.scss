@@ -97,6 +97,29 @@
   border-radius: 5px 5px 0 0;
 }
 
+:local(.badge) {
+  position: absolute;
+  right: -12px;
+  bottom: -6px;
+  border-radius: 50%;
+  background-color: var(--action-label-color);
+  display: inline-block;
+  padding: 0.25em;
+  font-size: 60%;
+  font-weight: 700;
+  line-height: 1;
+  width: 1.6em;
+  height: 1.6em;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+:local(.message-entry-button-history):hover :local(.badge),
+:local(.badge):hover {
+  color: #fff;
+}
+
 :local(.message-entry-spawn) {
   color: var(--overlay-text-field-widget-color);
   appearance: none;

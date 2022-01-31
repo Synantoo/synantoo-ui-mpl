@@ -20,6 +20,7 @@ const isMobile = AFRAME.utils.device.isMobile();
 
 class InWorldChatBox extends Component {
   static propTypes = {
+    totalUnread: PropTypes.number,
     expanded: PropTypes.bool,
     onExpand: PropTypes.func,
     presences: PropTypes.array,
@@ -370,7 +371,14 @@ class InWorldChatBox extends Component {
               {this.props.showExpired ? (
                 <FontAwesomeIcon icon={faChevronDown} />
               ) : (
-                <FontAwesomeIcon icon={faChevronUp} />
+                <>
+                  <FontAwesomeIcon icon={faChevronUp} />
+                  {this.props.totalUnread !== 0 && (
+                    <span className={styles.badge}>
+                      {this.props.totalUnread}
+                    </span>
+                  )}
+                </>
               )}
             </button>
           )}

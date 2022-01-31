@@ -191,6 +191,10 @@
     -webkit-user-select: text;
     -ms-user-select: text;
   }
+
+  :local(.unread) {
+    background-color: var(--action-label-color);
+  }
 }
 
 :local(.presence-log-spawn) {

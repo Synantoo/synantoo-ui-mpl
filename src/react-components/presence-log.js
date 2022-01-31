@@ -44,6 +44,7 @@ export default class PresenceLog extends Component {
         (e.type === "chat" || e.type === "image") && e.maySpawn,
       [styles.presenceLogChat]: e.type === "chat",
       [styles.expired]: this.props.showExpired ? false : !!e.expired,
+      [styles.unread]: !e.viewed,
     };
 
     const isBot = false;
