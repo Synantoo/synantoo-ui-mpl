@@ -6,6 +6,19 @@
     "build": "webpack --mode=production && cp -rf dist/* ../synantoo-frontend/public/dist/ && rm -rf dist",
     "start": "webpack-dev-server --mode=development"
   },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "not IE 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
