@@ -215,7 +215,7 @@ export default class PresenceList extends Component {
   }
 
   sendMute(toClientId) {
-    const data = { type: "action", eventType: "mute" };
+    const data = { senderId: NAF.clientId, type: "action", eventType: "mute" };
     NAF.connection.sendDataGuaranteed(toClientId, "chatbox", data);
   }
 
@@ -228,7 +228,7 @@ export default class PresenceList extends Component {
       if (p.role !== "moderator") p.muted = true;
     });
     window.app.forceReactUpdate();
-    const data = { type: "action", eventType: "mute" };
+    const data = { senderId: NAF.clientId, type: "action", eventType: "mute" };
     NAF.connection.broadcastDataGuaranteed("chatbox", data);
   };
 
