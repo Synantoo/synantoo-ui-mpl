@@ -93,7 +93,7 @@
     "tar": "^5.0.10",
     "url-loader": "4.1.1",
     "webpack": "4.44.2",
-    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-bundle-analyzer": "^4.6.1",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "3.11.0",
     "worker-loader": "^2.0.0"
