@@ -57,7 +57,7 @@
     "babel-plugin-transform-react-jsx-img-import": "^0.1.4",
     "copy-webpack-plugin": "^4.5.1",
     "cors": "^2.8.4",
-    "css-loader": "^1.0.0",
+    "css-loader": "^6.7.2",
     "dotenv": "^5.0.1",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^2.9.0",
