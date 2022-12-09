@@ -82,7 +82,7 @@
     "rimraf": "^2.6.2",
     "sass": "^1.45.2",
     "sass-loader": "8.0.2",
-    "selfsigned": "^1.10.2",
+    "selfsigned": "^2.1.1",
     "shelljs": "^0.8.5",
     "spritesheet-js": "github:mozillareality/spritesheet.js#hubs/master",
     "style-loader": "^0.20.2",
@@ -95,7 +95,7 @@
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "^4.6.1",
     "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "3.11.3",
+    "webpack-dev-server": "4.11.1",
     "worker-loader": "^2.0.0"
   }
 }
